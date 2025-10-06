@@ -1,0 +1,1375 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MetroDocAI</title>
+    <style>
+     @import url("https://fonts.googleapis.com/css2?family=Google+Sans:wght@400&display=swap");
+
+:root {
+  --mat-sys-display-large: 400 3.562rem / 4rem "Google Sans", sans-serif;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+  background-color: #22262b;
+  color: #ffffff;
+  min-height: 100vh;
+}
+
+/* Header */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 32px;
+  background-color: #22262b;
+  border-bottom: 1px solid #22262b;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  font-size: 24px;
+  font-weight: 400;
+  color: #ffffff;
+  gap: 8px;
+}
+
+.logo::before {
+  content: "🔗";
+  font-size: 20px;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.settings-btn {
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: #ffffff;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: background 0.2s;
+}
+
+.settings-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.grid-menu-btn {
+  background: none;
+  border: none;
+  color: #ffffff;
+  padding: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+
+.grid-menu-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.profile-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23667eea"><circle cx="12" cy="12" r="12"/></svg>');
+  background-size: cover;
+  cursor: pointer;
+}
+
+/* Main Container */
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 32px;
+}
+
+/* Navigation and Controls Bar - Single Line */
+.nav-controls-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px 0 32px 0;
+  margin-bottom: 32px;
+}
+
+    .nav-tabs {
+    display: flex;
+    gap: 10;
+    background: transparent;
+    border-radius: 12px;
+    }
+
+    .nav-tab {
+    padding: 12px 20px;
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.7);
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.2s;
+    white-space: nowrap;
+    }
+
+    .nav-tab.active {
+    background: #33334d;
+    color: #ffffff;
+    border-radius: 50px;
+    }
+
+.nav-tab:hover:not(.active) {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* Controls Bar */
+.controls-bar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.view-controls {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.view-toggle {
+  display: flex;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  padding: 2px;
+}
+
+.view-btn {
+  padding: 8px 10px;
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.6);
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s;
+}
+
+.view-btn.active {
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+}
+
+.sort-dropdown {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+  padding: 12px 20px;
+  border-radius: 50px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.sort-dropdown option {
+  background: #2c2d30;
+  color: #ffffff;
+}
+
+.create-btn {
+  background: #ffffff;
+  border: none;
+  color: #1a1a1a;
+  padding: 12px 20px;
+  border-radius: 24px;
+  cursor: pointer;
+  font-size: 14px;
+  /* font-weight: 500; */
+  display: flex;
+  align-items: center;
+  gap: 10;
+  transition: all 0.2s;
+}
+
+.create-btn:hover {
+  background: #d4e0ef;
+  transform: translateY(-1px);
+}
+
+/* Section Title */
+.section-title {
+  font-size: 24px;
+  font-weight: 400;
+  margin-bottom: 24px;
+  color: #ffffff;
+}
+
+/* Featured Notebooks Grid */
+.featured-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 24px;
+  margin-bottom: 16px;
+}
+
+.featured-card {
+  height: 200px;
+  border-radius: 16px;
+  padding: 20px;
+  position: relative;
+  cursor: pointer;
+  transition: transform 0.2s;
+  overflow: hidden;
+}
+
+.featured-card:hover {
+  transform: translateY(-4px);
+}
+
+.featured-card.atlantic {
+  background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
+}
+
+.featured-card.business {
+  background: linear-gradient(135deg, #4f5bd5 0%, #962fbf 100%);
+}
+
+.featured-card.economist {
+  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+}
+
+.featured-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: radial-gradient(
+      circle at 20% 80%,
+      rgba(255, 255, 255, 0.1) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at 80% 20%,
+      rgba(255, 255, 255, 0.1) 0%,
+      transparent 50%
+    );
+  pointer-events: none;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
+}
+
+.publisher-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.publisher-icon {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 12px;
+  color: #000;
+}
+
+.business .publisher-icon {
+  background: rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+}
+
+.economist .publisher-icon {
+  background: #e53e3e;
+  color: #ffffff;
+}
+
+.publisher-name {
+  font-size: 14px;
+  font-weight: 500;
+  opacity: 0.9;
+}
+
+.card-options {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: #ffffff;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+}
+
+.featured-title {
+  font-size: 22px;
+  font-weight: 400;
+  line-height: 1.3;
+  margin-bottom: 12px;
+  color: #ffffff;
+}
+
+.featured-meta {
+  font-size: 13px;
+  opacity: 0.8;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Recent Notebooks */
+.recent-section {
+  margin-top: 48px;
+}
+
+.recent-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 24px;
+}
+
+.recent-card {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 24px;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+  min-height: 160px;
+  /* max-width: 300px; */
+}
+
+.recent-card:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.15);
+  transform: translateY(-2px);
+}
+
+.create-new-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  border: 2px dashed rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.create-new-card:hover {
+  border-color: rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.plus-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  margin-bottom: 12px;
+  color: #ffffff;
+}
+
+.notebook-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #ff8a00, #da1b60);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+  font-size: 16px;
+}
+
+.notebook-title {
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 1.3;
+  margin-bottom: 12px;
+  color: #ffffff;
+}
+
+.notebook-meta {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.6);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.options-btn {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: rgba(255, 255, 255, 0.6);
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.recent-card:hover .options-btn {
+  opacity: 1;
+}
+
+/* See All Link */
+.see-all {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 16px;
+}
+
+.see-all-link {
+  color: rgba(255, 255, 255, 0.7);
+  text-decoration: none;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  transition: color 0.2s;
+}
+
+.see-all-link:hover {
+  color: #ffffff;
+}
+
+/* Hidden sections */
+.hidden {
+  display: none;
+}
+
+/* Modal */
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 1000;
+  backdrop-filter: blur(4px);
+}
+
+.modal-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #2c2d30;
+  padding: 32px;
+  border-radius: 16px;
+  width: 90%;
+  max-width: 480px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.modal h2 {
+  font-size: 20px;
+  font-weight: 500;
+  margin-bottom: 24px;
+  color: #ffffff;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  color: #ffffff;
+  font-size: 14px;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+  width: 100%;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  color: #ffffff;
+  font-size: 14px;
+  outline: none;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.modal-buttons {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  margin-top: 24px;
+}
+
+.modal-btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.modal-btn.primary {
+  background: #ffffff;
+  color: #1a1a1a;
+}
+
+.modal-btn.primary:hover {
+  background: #f0f0f0;
+}
+
+.modal-btn.secondary {
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+}
+
+.modal-btn.secondary:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.close-btn {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 20px;
+  cursor: pointer;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .nav-controls-container {
+    flex-direction: column;
+    gap: 20px;
+    align-items: stretch;
+  }
+
+  .controls-bar {
+    justify-content: space-between;
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 0 16px;
+  }
+
+  .header {
+    padding: 16px;
+  }
+
+  .nav-controls-container {
+    flex-direction: column;
+    gap: 16px;
+    align-items: stretch;
+  }
+
+  .controls-bar {
+    flex-direction: column;
+    gap: 16px;
+    align-items: stretch;
+  }
+
+  .view-controls {
+    justify-content: space-between;
+  }
+
+  .featured-grid,
+  .recent-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.welcome-message {
+  text-align: center;
+  font-family: "Google Sans", sans-serif;
+  font-weight: 500;
+
+  font-size: 30px;
+}
+.settings-btn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 10px 10px;
+  font-family: "Google Sans", sans-serif;
+  font-size: 14px;
+  cursor: pointer;
+  border: none;
+  background: transparent; /* Dark background for image feel */
+  color: #fff; /* White text */
+  border-radius: 32px; /* Fully rounded (pill shape) */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  transition: background 0.3s, box-shadow 0.2s;
+  border: 1px solid rgb(95, 88, 88);
+  width: 100px;
+}
+
+.settings-btn:hover {
+  background: #353a43; /* Slightly lighter on hover */
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.16);
+}
+
+.material-icons {
+  font-size: 18px; /* Larger icon */
+  margin-right: 2px;
+}
+
+#nav-01:hover {
+  background-color: #353a43;
+  color: #ffffff;
+  border-radius: 50px;
+}
+#nav-02:hover {
+  background-color: #353a43;
+  color: #ffffff;
+  border-radius: 50px;
+  margin-left: 20px;
+}
+#nav-03:hover {
+  background-color: #353a43;
+  color: #ffffff;
+  border-radius: 50px;
+  margin-left: 20px;
+
+}
+
+
+
+/* MODIFICATION: Make header-right a positioning anchor for the profile popup */
+.header-right {
+  position: relative;
+}
+
+/* MODIFICATION: Update profile button to match the image */
+.profile-btn {
+  border: 2px solid #667eea;
+  background: url('data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/4QAiRXhpZgAATU0AKgAAAAgAAQESAAMAAAABAAEAAAAAAAD/2wBDAAIBAQIBAQICAgICAgICAwUDAwMDAwYEBAMFBwYHBwcGBwcICQsJCAgKCAcHCg0KCgsMDAwMBwkODw0MDgsMDAz/2wBDAQICAgMDAwYDAwYMCAcIDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAz/wAARCAAgACADAREAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAwECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldhZWmNkZWZnaGlqc3R1dnd4eXqCg4SFhoeIiYqSk5SVlpeYmZqio6Slpqeoqaqys7S1tre4ubrCw8TFxsfIycrS09TV1tfY2dri4+Tl5ufo6ery8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD9NfiB420z4ZeA9c8V6zJ5Wl6BZTahcvkAlI0LMAPUgcepFfld4e/4LPeM9R8dG81DwN4fg8IXN2Fj0uGSY3kFsWwMyF9jOF5OFUZ4GBX3P8A8FPrS8vP2B/iiun7/tA03e2zOfLWaNpOnbbuz7Zr8DLa1tvsxZ5G3kY27Rg+/NAH9HHw1+JGh/F7wFpPijw1fR6jomsQC4tp4z1B6qR2ZSCCD0IIrfr44/4I5afq+n/sF+ERqyyo8k97LbrLnKwNcOUxnsRgj2NfQvxu+NPh/wDZ6+F2seMvFV59j0fR4fNkcDLyOTtSNB/E7MQoHqaAPkX9vr/gpp4g/ZO+N2h+CNE8KaZrC3+nLqN1d6hPLGEjaR0UKqEc/Jnk969R/YM/bM1P9tDwHr2vah4WtfC8uj6gLHyLa7a5SZTGr7gWVT3Ixivw5/ao+O2qftLfG/xATeO9ZEkd1rV40qW7SbxaxDhIkPYKoA44zmv1f/wCCInw31bwR+yPe6jqsMtr/AMJTrlxqlpFKpUiAIkStg9m2Ej1FAH5YfEj4geI/if4wv9b8V6xd65rV1KRNeXkxkdsHgZPQAdAOBX68/wDBAbx1rPjD9lPxHpurahPqEHhrxJLY6e08hkaGFoYpNilskgM5xnpuwOBX4w+L4fL8XaoD/wA/Un/oRr9nf+DeSHb+zH43fHW+Lf/SaKgD8jP2qPDlj4Q/aW8faNpdsllp2m+IL23t4IwAkUaykKoHYAV/QJ+xJ4mvvF/7IXw11XU7qS91C90G0lnnlYs8jmMZJJ5JNfz3/ALY8Xl/tW/EgYx/xVF//AOlDV/QZ+xBGP+GSPhr/ANi/a/8AotaAP/Z') center center / cover;
+}
+
+
+/* NEW: Styles for Profile Pop-up */
+/* --- AFTER --- */
+.profile-popup {
+    display: none;
+    position: fixed; /* This "fixes" it to the browser window */
+    top: 68px;       /* Adjusted distance from the top of the window */
+    right: 32px;      /* Adjusted distance from the right of the window */
+    /* ... other styles */
+    width: 360px;
+    background-color: #353841;
+    border-radius: 28px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+    color: #e8eaed;
+    font-family: 'Google Sans', sans-serif;
+    z-index: 1001;
+}
+.profile-popup-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 8px 16px 24px;
+    font-size: 14px;
+    color: #bdc1c6;
+}
+.profile-popup-header .close-btn {
+    color: #bdc1c6;
+}
+.profile-popup-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 24px 20px 24px;
+    text-align: center;
+}
+.profile-pic {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: url('data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/4QAiRXhpZgAATU0AKgAAAAgAAQESAAMAAAABAAEAAAAAAAD/2wBDAAIBAQIBAQICAgICAgICAwUDAwMDAwYEBAMFBwYHBwcGBwcICQsJCAgKCAcHCg0KCgsMDAwMBwkODw0MDgsMDAz/2wBDAQICAgMDAwYDAwYMCAcIDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAz/wAARCAAgACADAREAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAwECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldhZWmNkZWZnaGlqc3R1dnd4eXqCg4SFhoeIiYqSk5SVlpeYmZqio6Slpqeoqaqys7S1tre4ubrCw8TFxsfIycrS09TV1tfY2dri4+Tl5ufo6ery8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD9NfiB420z4ZeA9c8V6zJ5Wl6BZTahcvkAlI0LMAPUgcepFfld4e/4LPeM9R8dG81DwN4fg8IXN2Fj0uGSY3kFsWwMyF9jOF5OFUZ4GBX3P8A8FPrS8vP2B/iiun7/tA03e2zOfLWaNpOnbbuz7Zr8DLa1tvsxZ5G3kY27Rg+/NAH9HHw1+JGh/F7wFpPijw1fR6jomsQC4tp4z1B6qR2ZSCCD0IIrfr44/4I5afq+n/sF+ERqyyo8k97LbrLnKwNcOUxnsRgj2NfQvxu+NPh/wDZ6+F2seMvFV59j0fR4fNkcDLyOTtSNB/E7MQoHqaAPkX9vr/gpp4g/ZO+N2h+CNE8KaZrC3+nLqN1d6hPLGEjaR0UKqEc/Jnk969R/YM/bM1P9tDwHr2vah4WtfC8uj6gLHyLa7a5SZTGr7gWVT3Ixivw5/ao+O2qftLfG/xATeO9ZEkd1rV40qW7SbxaxDhIkPYKoA44zmv1f/wCCInw31bwR+yPe6jqsMtr/AMJTrlxqlpFKpUiAIkStg9m2Ej1FAH5YfEj4geI/if4wv9b8V6xd65rV1KRNeXkxkdsHgZPQAdAOBX68/wDBAbx1rPjD9lPxHpurahPqEHhrxJLY6e08hkaGFoYpNilskgM5xnpuwOBX4w+L4fL8XaoD/wA/Un/oRr9nf+DeSHb+zH43fHW+Lf/SaKgD8jP2qPDlj4Q/aW8faNpdsllp2m+IL23t4IwAkUaykKoHYAV/QJ+xJ4mvvF/7IXw11XU7qS91C90G0lnnlYs8jmMZJJ5JNfz3/ALY8Xl/tW/EgYx/xVF//AOlDV/QZ+xBGP+GSPhr/ANi/a/8AotaAP/Z') center center / cover;
+    margin-bottom: 12px;
+    position: relative;
+}
+.profile-pic-camera-icon {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 28px;
+    height: 28px;
+    background-color: #3c4043;
+    border: 2px solid #353841;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.profile-pic-camera-icon svg {
+    width: 16px;
+    height: 16px;
+    fill: #e8eaed;
+}
+.profile-greeting {
+    font-size: 22px;
+    font-weight: 400;
+    color: #e8eaed;
+    margin-bottom: 12px;
+}
+.profile-btn-manage {
+    width: 100%;
+    padding: 8px 16px;
+    font-size: 14px;
+    background-color: transparent;
+    color: #8ab4f8;
+    border: 1px solid #5f6368;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+.profile-btn-manage:hover {
+    background-color: rgba(138, 180, 248, 0.1);
+}
+.profile-popup-footer {
+    display: flex;
+    justify-content: space-between;
+    padding: 16px 24px;
+    border-top: 1px solid #5f6368;
+}
+.profile-btn-secondary {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background-color: transparent;
+    border: 1px solid #5f6368;
+    color: #e8eaed;
+    font-size: 14px;
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    flex-grow: 1;
+    justify-content: center;
+    transition: background-color 0.2s;
+}
+.profile-btn-secondary:first-child {
+    margin-right: 8px;
+}
+.profile-btn-secondary:hover {
+    background-color: rgba(255, 255, 255, 0.08);
+}
+.profile-btn {
+  /* 1. Set the size of the button */
+  width: 36px;  /* Or any size you prefer */
+  height: 36px;
+
+  /* 2. Make it a perfect circle */
+  border-radius: 50%; 
+
+  /* 3. Remove default button styles */
+  border: none;
+  padding: 0;
+
+  /* 4. Hide parts of the image that are outside the circle */
+  overflow: hidden; 
+
+  /* 5. Ensure the cursor changes to a pointer on hover */
+  cursor: pointer;
+  
+  /* Optional: Add a border around the circle */
+  border: 2px solid #667eea; 
+}
+
+.profile-btn img {
+  /* 6. Make the image fill the button completely */
+  width: 100%;
+  height: 100%;
+
+  /* 7. Scale the image to cover the area without distortion */
+  object-fit: cover; 
+}
+
+
+.profile-pic {
+  /* Define the size and shape */
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  position: relative; /* Needed to position the camera icon */
+
+  /* --- Add these properties --- */
+  background-image: url('https://i.pinimg.com/736x/fa/d5/e7/fad5e79954583ad50ccb3f16ee64f66d.jpg');
+  background-size: cover;     /* Scales the image to fill the div */
+  background-position: center;  /* Centers the image */
+  background-repeat: no-repeat; /* Prevents the image from repeating */
+}
+
+/* --- NEW: Dropdown Menu Styles --- */
+.dropdown-menu {
+  display: none; /* Hidden by default */
+  position: absolute;
+  top: calc(100% + 8px); /* Position below the button with a small gap */
+  right: 0;
+  background-color: #353841;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  min-width: 260px;
+  padding: 8px;
+  z-index: 1002;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.dropdown-menu.show {
+  display: block; /* Show when active */
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 10px 12px;
+  color: #e8eaed;
+  font-size: 14px;
+  text-decoration: none;
+  border-radius: 8px;
+  cursor: pointer;
+  background-color: transparent;
+  border: none;
+  width: 100%;
+  text-align: left;
+}
+
+.dropdown-item:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.dropdown-item svg {
+  width: 20px;
+  height: 20px;
+  fill: #bdc1c6;
+}
+
+.dropdown-divider {
+  height: 1px;
+  background-color: rgba(255, 255, 255, 0.1);
+  margin: 8px 0;
+}
+
+/* Submenu specific styles */
+.has-submenu {
+  position: relative;
+}
+.has-submenu .arrow {
+  margin-left: auto; /* Push arrow to the far right */
+}
+
+.submenu {
+  /* Hide and position the submenu */
+  display: none;
+  top: -8px; /* Align with parent item */
+  left: 100%;
+  margin-left: 4px;
+}
+
+.has-submenu:hover > .submenu {
+  /* Show submenu on hover of its parent item */
+  display: block;
+}
+.settings-btn svg {
+  width: 20px;
+  height: 20px;
+  fill: #ffffff; /* Sets the icon color to white */
+}
+    </style>
+  </head>
+  <body>
+    <header class="header">
+      <div class="logo">MetroDocAI</div>
+      <div class="header-right">
+        <button class="settings-btn" id="settingsBtn">
+          <svg viewBox="0 0 24 24">
+            <path
+              d="M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65C14.46 2.18 14.25 2 14 2h-4c-.25 0-.46.18-.49.42l-.38 2.65c-.61.25-1.17.59-1.69.98l-2.49-1c-.23-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64l2.11 1.65c-.04.32-.07.65-.07.98s.03.66.07.98l-2.11 1.65c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1c.52.4 1.08.73 1.69.98l.38 2.65c.03.24.24.42.49.42h4c.25 0 .46-.18.49-.42l.38-2.65c.61-.25 1.17-.59 1.69-.98l2.49 1c.23.09.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65zM12 15.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z"></path>
+          </svg>Settings
+        </button>
+        <div id="settingsDropdown" class="dropdown-menu">
+          <a href="#" class="dropdown-item">
+            <svg viewBox="0 0 24 24"><path
+                d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zM11 16h2v-2h-2v2zm1-10c-1.66 0-3 1.34-3 3h2c0-.55.45-1 1-1s1 .45 1 1c0 1-1.5 1.25-1.5 2.5h2c0-.69 1.5-.94 1.5-2.5 0-1.66-1.34-3-3-3z"></path></svg>
+            <span>NotebookLM Help</span>
+          </a>
+          <a href="#" class="dropdown-item">
+            <svg viewBox="0 0 24 24"><path
+                d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 12H6l-2 2V4h16v10z"></path></svg>
+            <span>Send feedback</span>
+          </a>
+          <a href="#" class="dropdown-item">
+            <svg viewBox="0 0 24 24"><path
+                d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM20 12c0 1.89-1.01 3.6-2.56 4.51l-3.95-3.95C14.15 11.23 15 9.24 15 7c0-1.04-.25-2.02-.7-2.89 2.1.88 3.7 2.99 3.7 5.39v.5h2v-.5zM13 4.07c.64.17 1.25.41 1.82.72L9.1 10.51c-.63-.92-1-2.02-1-3.21 0-2.28 1.5-4.23 3.59-4.8l1.31.57zM8.3 5.09C6.41 6.55 5.5 8.88 5.5 11.5c0 .35.03.69.08 1.02l4.1-4.1C9.25 7.42 8.7 6.13 8.3 5.09zM4.06 8.51C4.02 8.84 4 9.17 4 9.5v5c0 2.03.75 3.88 2.01 5.29L11.5 14.3c-1.33-.24-2.48-1-3.18-2.09l-3.23-3.23c-.3-.22-.63-.42-.93-.67zM11 19.93c-1.37-.27-2.64-.89-3.66-1.76l5.41-5.41c1.23.83 2.13 2.05 2.31 3.52.12.95-.06 1.88-.53 2.65z"></path></svg>
+            <span>Output Language</span>
+          </a>
+
+          <div class="dropdown-item has-submenu">
+            <svg viewBox="0 0 24 24"><path
+                d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9c0-.46-.04-.92-.1-1.36-.98 1.37-2.54 2.26-4.4 2.26-2.67 0-4.85-2.02-4.98-4.66C6.73 11.66 8 8.05 8 8c0-2.67 2.13-4.85 4.8-5 .42 0 .83.06 1.23.18-1.42.74-2.53 2.02-2.86 3.55-.4 1.87.21 3.58 1.48 4.67.73.63 1.63 1 2.61 1 .53 0 1.05-.13 1.51-.37-.01.23-.03.46-.03.69 0 4.97-4.03 9-9 9z"></path></svg>
+            <span>Device</span>
+            <svg class="arrow" viewBox="0 0 24 24"><path
+                d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"></path></svg>
+            <div class="submenu dropdown-menu">
+              <a href="#" class="dropdown-item">
+                <svg viewBox="0 0 24 24"><path
+                    d="M12 4c-4.42 0-8 3.58-8 8s3.58 8 8 8 8-3.58 8-8-3.58-8-8-8zm0 16c-3.31 0-6-2.69-6-6s2.69-6 6-6 6 2.69 6 6-2.69 6-6 6zM13 7h-2v5.41l3.79 3.8 1.42-1.42L13 11.59V7z"
+                    opacity=".3"></path><path
+                    d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.21-13.04-1.42-1.41-4.6 4.6c-.37.37-.58.88-.58 1.41v.01c0 .53.21 1.04.58 1.41l4.6 4.6 1.42-1.41L8.91 13H15v-2H8.91l3.3-3.04z"></path></svg>
+                <span>Light mode</span>
+              </a>
+              <a href="#" class="dropdown-item">
+                <svg viewBox="0 0 24 24"><path
+                    d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9c0-.46-.04-.92-.1-1.36-.98 1.37-2.54 2.26-4.4 2.26-2.67 0-4.85-2.02-4.98-4.66C6.73 11.66 8 8.05 8 8c0-2.67 2.13-4.85 4.8-5 .42 0 .83.06 1.23.18-1.42.74-2.53 2.02-2.86 3.55-.4 1.87.21 3.58 1.48 4.67.73.63 1.63 1 2.61 1 .53 0 1.05-.13 1.51-.37-.01.23-.03.46-.03.69 0 4.97-4.03 9-9 9z"></path></svg>
+                <span>Dark mode</span>
+              </a>
+              <a href="#" class="dropdown-item">
+                <svg viewBox="0 0 24 24"><path
+                    d="M12 4c-4.42 0-8 3.58-8 8s3.58 8 8 8 8-3.58 8-8-3.58-8-8-8zm0 16c-3.31 0-6-2.69-6-6s2.69-6 6-6 6 2.69 6 6-2.69 6-6 6zM13 7h-2v5.41l3.79 3.8 1.42-1.42L13 11.59V7z"
+                    opacity=".3"></path><path
+                    d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.21-13.04-1.42-1.41-4.6 4.6c-.37.37-.58.88-.58 1.41v.01c0 .53.21 1.04.58 1.41l4.6 4.6 1.42-1.41L8.91 13H15v-2H8.91l3.3-3.04z"></path></svg>
+                <span>Device</span>
+              </a>
+            </div>
+          </div>
+
+          <div class="dropdown-divider"></div>
+
+          <a href="#" class="dropdown-item">
+            <svg viewBox="0 0 24 24"><path
+                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zM7.07 17.22c.28-.28.52-.59.74-.92.22-.32.4-.68.53-1.06H7.07v-1.51h4.94c.05-.24.08-.49.08-.74s-.03-.5-.08-.74H7.07v-1.51h4.29c-.13-.38-.31-.74-.53-1.06-.22-.33-.46-.64-.74-.92L12 12l4.93 4.93c-.28.28-.52.59-.74.92-.22.32-.4.68-.53 1.06h2.27v1.51H12.2c-.05.24-.08.49-.08.74s.03.5.08.74h3.23v1.51H10.5c.13-.38.31-.74.53-1.06.22-.33.46-.64.74-.92L17.22 12l-4.93-4.93z"></path></svg>
+            <span>Upgrade to Plus</span>
+          </a>
+        </div>
+        <button class="profile-btn" id="profileBtn"><img
+            src="https://i.pinimg.com/736x/fa/d5/e7/fad5e79954583ad50ccb3f16ee64f66d.jpg"
+            alt></button>
+      </div>
+    </header>
+
+    <div class="container">
+      <div class="welcome-message"> <h1>Welcome to MetroDocAI</h1> </div>
+      <div class="nav-controls-container">
+        <div class="nav-tabs">
+          <button class="nav-tab active" data-tab="all">All</button>
+          <button class="nav-tab" data-tab="my">My notebooks</button>
+          <button class="nav-tab" data-tab="featured">Featured
+            notebooks</button>
+        </div>
+
+        <div class="controls-bar">
+
+          <button class="create-btn" onclick="openCreateModal()">
+            + Create new
+          </button>
+        </div>
+      </div>
+
+      <section id="featured-section">
+        <h2 class="section-title">Featured notebooks</h2>
+        <div class="featured-grid">
+          <div class="featured-card atlantic">
+            <div class="card-header">
+              <div class="publisher-info">
+                <div class="publisher-icon">A</div>
+                <span class="publisher-name">The Atlantic</span>
+              </div>
+              <button class="card-options">⋯</button>
+            </div>
+            <h3 class="featured-title">How To Build A Life, from The
+              Atlantic</h3>
+            <div class="featured-meta">
+              <span>Apr 23, 2025</span>
+              <span>•</span>
+              <span>46 sources</span>
+            </div>
+          </div>
+
+          <div class="featured-card business">
+            <div class="card-header">
+              <div class="publisher-info">
+                <div class="publisher-icon">📊</div>
+                <span class="publisher-name">Business</span>
+              </div>
+              <button class="card-options">⋯</button>
+            </div>
+            <h3 class="featured-title">Earnings Reports For Top 50
+              Corporations</h3>
+            <div class="featured-meta">
+              <span>Apr 18, 2025</span>
+              <span>•</span>
+              <span>168 sources</span>
+            </div>
+          </div>
+
+          <div class="featured-card economist">
+            <div class="card-header">
+              <div class="publisher-info">
+                <div class="publisher-icon">E</div>
+                <span class="publisher-name">The Economist</span>
+              </div>
+              <button class="card-options">⋯</button>
+            </div>
+            <h3 class="featured-title">The World Ahead 2025</h3>
+            <div class="featured-meta">
+              <span>Jul 7, 2025</span>
+              <span>•</span>
+              <span>70 sources</span>
+            </div>
+          </div>
+        </div>
+        <div class="see-all">
+          <a href="#" class="see-all-link">See all ›</a>
+        </div>
+      </section>
+
+      <section class="recent-section">
+        <h2 class="section-title">Recent notebooks</h2>
+        <div class="recent-grid" id="recent-grid">
+          <div class="recent-card create-new-card" onclick="openCreateModal()">
+            <div class="plus-icon">+</div>
+            <h3 class="notebook-title">Create new notebook</h3>
+          </div>
+
+        </div>
+      </section>
+    </div>
+
+    <div id="createModal" class="modal">
+      <div class="modal-content">
+        <button class="close-btn" onclick="closeModal()">&times;</button>
+        <h2>Create new notebook</h2>
+        <form id="createForm">
+          <div class="form-group">
+            <label for="notebookTitle">Notebook title</label>
+            <input type="text" id="notebookTitle"
+              placeholder="Enter notebook title" required>
+          </div>
+          <div class="modal-buttons">
+            <button type="button" class="modal-btn secondary"
+              onclick="closeModal()">Cancel</button>
+            <button type="submit" class="modal-btn primary">Create</button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div style="height: 100px;"></div>
+
+    <div id="profilePopup" class="profile-popup">
+      <div class="profile-popup-header">
+        <!-- <span>samaypowade23@gmail.com</span> -->
+        <button class="close-btn" id="closeProfileBtn">&times;</button>
+      </div>
+      <div class="profile-popup-body">
+        <div class="profile-pic">
+          <div class="profile-pic-camera-icon">
+            <svg viewBox="0 0 24 24"><path
+                d="M20 4h-3.17L15 2H9L7.17 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 14H4V6h4.05l1.83-2h4.24l1.83 2H20v12zM12 7c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zm0 8c-1.65 0-3-1.35-3-3s1.35-3 3-3 3 1.35 3 3-1.35 3-3 3z"></path></svg>
+          </div>
+        </div>
+        <h3 class="profile-greeting">Hi, Samay!</h3>
+        <!-- <button class="profile-btn-manage">Manage your Google Account</button> -->
+      </div>
+      <div class="profile-popup-footer">
+        <button class="profile-btn-secondary">
+          <svg viewBox="0 0 24 24" width="20" height="20"
+            fill="currentColor"><path
+              d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path></svg>
+          <span>Add account</span>
+        </button>
+        <button class="profile-btn-secondary">
+          <svg viewBox="0 0 24 24" width="20" height="20"
+            fill="currentColor"><path
+              d="m17 7-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5-5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"></path></svg>
+          <span>Sign out</span>
+        </button>
+      </div>
+    </div>
+    <script>
+    // Global state
+    let currentTab = 'all';
+    let notebooks = [];
+
+    // --- Function to fetch notebooks from the backend ---
+    async function fetchNotebooks() {
+        try {
+            // This is a placeholder for a real API call.
+            const response = await fetch('/api/notebooks');
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            notebooks = await response.json();
+            renderNotebooks();
+        } catch (error) {
+            console.error("Could not fetch notebooks:", error);
+        }
+    }
+    
+    // --- Function to delete a notebook ---
+    async function deleteNotebook(notebookId, event) {
+        event.stopPropagation();
+        if (!confirm('Are you sure you want to delete this notebook?')) {
+            return;
+        }
+        try {
+            const response = await fetch(`/api/notebooks/${notebookId}`, { method: 'DELETE' });
+            if (response.status === 204) {
+                notebooks = notebooks.filter(nb => nb.id !== notebookId);
+                renderNotebooks();
+            } else {
+                const errorData = await response.json();
+                throw new Error(errorData.detail || 'Failed to delete notebook');
+            }
+        } catch (error) {
+            console.error('Error deleting notebook:', error);
+            alert('Could not delete the notebook. Please try again.');
+        }
+    }
+
+    // Tab switching
+    document.querySelectorAll('.nav-tab').forEach(tab => {
+        tab.addEventListener('click', function() {
+            document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+            this.classList.add('active');
+            currentTab = this.dataset.tab;
+            updateView();
+        });
+    });
+
+    // Update view based on current tab
+    function updateView() {
+        const featuredSection = document.getElementById('featured-section');
+        const recentSection = document.querySelector('.recent-section');
+        switch(currentTab) {
+            case 'all':
+                featuredSection.classList.remove('hidden');
+                recentSection.classList.remove('hidden');
+                break;
+            case 'my':
+                featuredSection.classList.add('hidden');
+                recentSection.classList.remove('hidden');
+                break;
+            case 'featured':
+                featuredSection.classList.remove('hidden');
+                recentSection.add('hidden');
+                break;
+        }
+    }
+
+    // Modal functions
+    function openCreateModal() {
+        document.getElementById('createModal').style.display = 'block';
+        document.getElementById('notebookTitle').focus();
+    }
+
+    function closeModal() {
+        document.getElementById('createModal').style.display = 'none';
+        document.getElementById('createForm').reset();
+    }
+
+    // --- Create notebook form submission ---
+    document.getElementById('createForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const title = document.getElementById('notebookTitle').value;
+        const newNotebook = {
+            id: Date.now(),
+            title: title,
+            date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+            sources: [] // CORRECTED: Changed 0 to an empty list []
+        };
+        try {
+            const response = await fetch('/api/notebooks', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(newNotebook)
+            });
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const createdNotebook = await response.json();
+            notebooks.unshift(createdNotebook);
+            renderNotebooks();
+            closeModal();
+        } catch(error) {
+            console.error("Could not create notebook:", error);
+            alert("Failed to create notebook. Please check the console for details.");
+        }
+    });
+
+    // Render notebooks
+    function renderNotebooks() {
+        const grid = document.getElementById('recent-grid');
+        let html = `
+            <div class="recent-card create-new-card" onclick="openCreateModal()">
+                <div class="plus-icon">+</div>
+                <h3 class="notebook-title">Create new notebook</h3>
+            </div>
+        `;
+        notebooks.forEach(notebook => {
+            html += `
+                <div class="recent-card" onclick="window.location.href='/document/${notebook.id}'">
+                    <button class="options-btn" onclick="deleteNotebook(${notebook.id}, event)">🗑</button>
+                    <div class="notebook-icon">📝</div>
+                    <h3 class="notebook-title">${notebook.title}</h3>
+                    <div class="notebook-meta">
+                        <span>${notebook.date}</span>
+                        <span>•</span>
+                        <span>${notebook.sources.length} source${notebook.sources.length !== 1 ? 's' : ''}</span>
+                    </div>
+                </div>
+            `;
+        });
+        grid.innerHTML = html;
+    }
+// Add this to your script to make the close buttons work
+
+document.querySelectorAll('.close-btn').forEach(button => {
+    button.addEventListener('click', (e) => {
+        e.stopPropagation(); // Prevents other click events from firing
+        closeAllPopups();    // This function closes all pop-ups
+    });
+});
+    // --- Initialize by fetching data from the server ---
+    document.addEventListener('DOMContentLoaded', function() {
+        fetchNotebooks();
+    });
+
+    // Featured card interactions
+    document.querySelectorAll('.featured-card').forEach(card => {
+        card.addEventListener('click', function() {
+            const title = this.querySelector('.featured-title').textContent;
+            console.log(`Opening: ${title}`);
+        });
+    });
+
+    // --- MODIFIED SECTION FOR POP-UPS AND DROPDOWNS ---
+
+    // 1. Select all the necessary HTML elements
+    const settingsBtn = document.getElementById('settingsBtn');
+    const profileBtn = document.getElementById('profileBtn');
+    const createModal = document.getElementById('createModal');
+    const profilePopup = document.getElementById('profilePopup');
+    const settingsDropdown = document.getElementById('settingsDropdown'); // MODIFIED: Changed from settingsModal
+
+    // 2. Click event for the new Settings Dropdown
+    settingsBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        // This toggles the 'show' class to make the dropdown visible
+        settingsDropdown.classList.toggle('show');
+    });
+
+    // 3. Click event for the Profile pop-up (no changes here)
+    profileBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const isHidden = profilePopup.style.display === 'none' || profilePopup.style.display === '';
+        // Close other popups first
+        if (settingsDropdown) settingsDropdown.classList.remove('show');
+        if (isHidden) {
+            profilePopup.style.display = 'block';
+        } else {
+            profilePopup.style.display = 'none';
+        }
+    });
+
+    // 4. Logic to close pop-ups when clicking outside or pressing Escape
+    function closeAllPopups() {
+        if (profilePopup) profilePopup.style.display = 'none';
+        if (settingsDropdown) settingsDropdown.classList.remove('show');
+        if (createModal) closeModal();
+    }
+
+    window.addEventListener('click', function(e) {
+        // Close settings dropdown if the click is outside
+        if (settingsDropdown && settingsDropdown.classList.contains('show') && !settingsBtn.contains(e.target) && !settingsDropdown.contains(e.target)) {
+            settingsDropdown.classList.remove('show');
+        }
+        // Close profile popup if the click is outside
+        if (profilePopup && profilePopup.style.display === 'block' && !profileBtn.contains(e.target) && !profilePopup.contains(e.target)) {
+            profilePopup.style.display = 'none';
+        }
+        // Close create modal if the click is on the overlay
+        if (e.target === createModal) {
+            closeModal();
+        }
+    });
+    
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            closeAllPopups();
+        }
+    });
+</script>
+
+  </body>
+</html>

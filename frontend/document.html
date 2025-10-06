@@ -1,0 +1,229 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MetroDocAi</title>
+<link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+    <div class="header">
+        <div class="logo">
+            <div class="logo-icon">📓</div>
+            Untitled notebook
+        </div>
+        <div class="header-controls">
+            <button class="btn">🔒 Share</button>
+            <button class="settings-btn" id="settingsBtn">
+            <svg viewBox="0 0 24 24">
+        <path d="M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65C14.46 2.18 14.25 2 14 2h-4c-.25 0-.46.18-.49.42l-.38 2.65c-.61.25-1.17.59-1.69.98l-2.49-1c-.23-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64l2.11 1.65c-.04.32-.07.65-.07.98s.03.66.07.98l-2.11 1.65c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1c.52.4 1.08.73 1.69.98l.38 2.65c.03.24.24.42.49.42h4c.25 0 .46-.18.49-.42l.38-2.65c.61-.25 1.17-.59 1.69-.98l2.49 1c.23.09.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65zM12 15.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z"></path>
+    </svg>Settings
+        </button>
+        
+            <button class="profile-btn" id="profileBtn"><img
+            src="https://i.pinimg.com/736x/fa/d5/e7/fad5e79954583ad50ccb3f16ee64f66d.jpg"
+            alt></button>
+        </div>
+    </div>
+
+    <div class="main-container">
+        <!-- Collapsible Sidebar -->
+        <div class="sidebar" id="sidebar">
+            <!-- Sidebar Toggle Button -->
+           
+            
+            <!-- Sidebar Content -->
+            <div class="sidebar-content">
+                <div class="sidebar-header">
+                    <div class="header-left">
+                        <h3 class="sidebar-title">Sources</h3>
+                    </div>
+                    <div class="header-actions">
+                        <button class="add-btn" onclick="openUploadModal()" title="Add source">
+                            <span class="btn-icon">+</span>
+                            <span class="btn-text">Add</span>
+                        </button>
+                     
+                    </div>
+                </div>
+                
+                <!-- Sources Content -->
+                <div class="sources-content">
+                    <!-- Empty State -->
+                    <div id="empty-state">
+                        <div class="sources-icon">📄</div>
+                        <div class="sources-title">Saved sources will appear here</div>
+                        <div class="sources-description">
+                            Click Add source above to add PDFs, websites, text, videos,<br>
+                            or audio files. Or import a file directly from Google Drive.
+                        </div>
+                    </div>
+                    
+                    <!-- Uploaded Files -->
+                    <div id="uploaded-files" class="uploaded-files hidden"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chat Section -->
+        <div class="chat-section">
+            <div class="chat-header">
+                <div class="chat-title">Chat</div>
+                <div class="chat-header-actions">
+                    <button class="chat-header-btn" onclick="refreshChat()">⟳ Refresh</button>
+                </div>
+            </div>
+            
+            <!-- Chat Messages Area -->
+            <div class="chat-messages-wrapper">
+                <!-- Welcome State -->
+                <div id="welcomeState" class="welcome-message">
+                    <div class="welcome-icon">💬</div>
+                    <div class="welcome-title">Welcome to your notebook</div>
+                    <div class="welcome-description">
+                        Upload a source to start chatting. Ask questions, get summaries, 
+                        or create study materials based on your content.
+                    </div>
+                    <button class="upload-btn" onclick="openUploadModal()">Upload a source</button>
+                </div>
+                
+                <!-- Chat Messages Container -->
+                <div id="chatMessagesContainer" class="chat-messages-container hidden">
+                    <div class="chat-messages" id="chatMessagesScroll">
+                        <!-- Messages will be dynamically added here -->
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Sticky Input Section -->
+            <div class="chat-input-section">
+                
+                <div class="chat-input-container" id="chatInputContainer">
+                    <textarea 
+                        class="chat-input" 
+                        id="chatInput" 
+                        placeholder="Ask a question about your sources..."
+                        rows="1"
+                        disabled
+                    ></textarea>
+                    <div class="input-actions">
+                        <button class="send-btn" id="sendBtn" onclick="sendMessage()" disabled>➤</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Studio Section -->
+        <div class="studio-section">
+            <div class="studio-header">
+                <div class="studio-title">Studio</div>
+            </div>
+            <div class="create-overview">
+             
+            </div>
+            <div class="studio-tools">
+                <div class="tool-card">
+                    <div class="tool-icon">🎵</div>
+                    <div class="tool-name">Audio Overview</div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon">🎬</div>
+                    <div class="tool-name">Video Overview</div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon">🗺️</div>
+                    <div class="tool-name">Mind Map</div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon">📊</div>
+                    <div class="tool-name">Reports</div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon">🃏</div>
+                    <div class="tool-name">Flashcards</div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon">❓</div>
+                    <div class="tool-name">Quiz</div>
+                </div>
+            </div>
+            <div class="studio-footer">
+               
+                <button class="add-note-btn">✏️ Add note</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- File Input -->
+    <input type="file" id="fileInput" multiple accept=".pdf,.doc,.docx,.txt,.jpg,.jpeg,.png,.mp3,.mp4,.avi" onchange="handleFileSelect(event)">
+
+    <!-- Upload Modal -->
+    <div id="uploadModal" class="modal-overlay hidden">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-title-section">
+                    <div class="modal-title">
+                        <div class="logo-icon">📓</div>
+                        MetroDocAI
+                    </div>
+                    <div class="modal-subtitle">Add sources</div>
+                </div>
+                <div class="modal-header-actions">
+
+                    <button class="close-btn" onclick="closeUploadModal()">✕</button>
+                </div>
+            </div>
+            <div class="modal-content">
+             
+                
+                <div class="upload-zone" id="modalUploadZone" onclick="openFileDialog()" ondrop="handleModalDrop(event)" ondragover="handleModalDragOver(event)" ondragleave="handleModalDragLeave(event)">
+                    <div class="upload-zone-icon">⬆️</div>
+                    <div class="upload-zone-title">Upload sources</div>
+                    <div class="upload-zone-subtitle">
+                        Drag & drop or <span class="choose-file-link" onclick="openFileDialog(); event.stopPropagation();">choose file</span> to upload
+                    </div>
+                    <div class="supported-types">
+                        Supported file types: PDF, .txt, Markdown, Audio (e.g. mp3)
+                    </div>
+                </div>
+
+                <div class="source-options-grid">
+                    
+                    <div class="source-option" onclick="showComingSoon('Link')">
+                        <div class="source-option-icon">🔗</div>
+                        <div class="source-option-title">Link</div>
+                    </div>
+                    <div class="source-option" onclick="showComingSoon('Paste text')">
+                        <div class="source-option-icon">📄</div>
+                        <div class="source-option-title">Paste text</div>
+                    </div>
+                    <div class="source-option" onclick="showComingSoon('Google Drive')">
+                        <div class="source-option-icon">📁</div>
+                        <div class="source-option-title">Google Drive</div>
+                    </div>
+                
+                 
+                </div>
+                
+                <!-- Source Limit Indicator -->
+                <div class="source-limit-container">
+                    <div class="source-limit-text">
+                        📄 Source limit
+                    </div>
+                    <div class="source-limit-progress">
+                        <div class="progress-bar">
+                            <div class="progress-fill"></div>
+                        </div>
+                        <span class="source-limit-count" id="sourceLimitCount">0/50</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+        <script src="/static/js/script.js"></script>
+
+
+    </body>
+</html>
