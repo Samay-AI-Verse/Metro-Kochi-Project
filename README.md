@@ -21,4 +21,4 @@ MetroDocs AI is an intelligent document management system developed for Kochi Me
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/metrodocs-ai.git
+   [git clone https://github.com/yourusername/metrodocs-ai.git](https://github.com/Samay-AI-Verse/Metro-Kochi-Project.git)
