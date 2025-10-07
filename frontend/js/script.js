@@ -1,5 +1,5 @@
 // Global variables
-let uploadedFiles = [];
+let uploadedFiles = []; // Will now store objects with a 'selected' state
 let sourceCount = 0;
 let chatActive = false;
 
@@ -16,27 +16,22 @@ Would you like me to summarize the key structure, explain specific courses, or h
 ];
 
 // --- INITIALIZATION ---
-// This single listener ensures all code runs after the HTML is fully loaded.
 document.addEventListener('DOMContentLoaded', () => {
     setupEventListeners();
     updateUI();
-    // The notebook fetch logic can also be placed here if needed
-    // fetchNotebookData(); 
 });
 
 
 // --- SETUP ALL EVENT LISTENERS ---
-// Central function to manage all click/input events for the page.
 function setupEventListeners() {
     // Modal open/close triggers
     const addSourceBtn = document.getElementById('addSourceBtn');
-    const uploadSourceWelcomeBtn = document.getElementById('uploadSourceWelcomeBtn');
-    const closeModalBtn = document.getElementById('closeModalBtn');
+    const uploadBtn = document.querySelector('.upload-btn'); // From welcome state
+    const closeModalBtn = document.querySelector('.close-btn');
     const modal = document.getElementById('uploadModal');
-    const modalContent = document.querySelector('#uploadModal .modal');
-
+    
     if (addSourceBtn) addSourceBtn.addEventListener('click', openUploadModal);
-    if (uploadSourceWelcomeBtn) uploadSourceWelcomeBtn.addEventListener('click', openUploadModal);
+    if (uploadBtn) uploadBtn.addEventListener('click', openUploadModal);
     if (closeModalBtn) closeModalBtn.addEventListener('click', closeUploadModal);
     
     // Close modal when clicking on the overlay
@@ -45,8 +40,6 @@ function setupEventListeners() {
             if (e.target === modal) closeUploadModal();
         });
     }
-    if(modalContent) modalContent.addEventListener('click', (e) => e.stopPropagation());
-
 
     // Chat input and send button
     const chatInput = document.getElementById('chatInput');
@@ -73,38 +66,45 @@ function setupEventListeners() {
 
     // Modal Upload Zone
     const modalUploadZone = document.getElementById('modalUploadZone');
-    const chooseFileLink = document.getElementById('chooseFileLink');
-    if (modalUploadZone) modalUploadZone.addEventListener('click', openFileDialog);
-    if (chooseFileLink) {
-        chooseFileLink.addEventListener('click', (e) => {
-            e.stopPropagation(); // Prevents modalUploadZone click from firing twice
-            openFileDialog();
-        });
+    if (modalUploadZone) {
+        modalUploadZone.addEventListener('click', openFileDialog);
+        modalUploadZone.addEventListener('drop', handleModalDrop);
+        modalUploadZone.addEventListener('dragover', handleModalDragOver);
+        modalUploadZone.addEventListener('dragleave', handleModalDragLeave);
     }
-    
+
     // File input change handler
     const fileInput = document.getElementById('fileInput');
     if(fileInput) fileInput.addEventListener('change', handleFileSelect);
 
-
-    // Modal "Coming Soon" buttons
-    const discoverSourcesBtn = document.getElementById('discoverSourcesBtn');
-    if(discoverSourcesBtn) discoverSourcesBtn.addEventListener('click', () => showComingSoon('Discover sources'));
-
-    document.querySelectorAll('.source-option').forEach(option => {
-        option.addEventListener('click', () => {
-            const feature = option.querySelector('.source-option-title').textContent;
-            showComingSoon(feature);
-        });
-    });
-    
     // Add Note button in Studio
     const addNoteBtn = document.querySelector('.add-note-btn');
     if(addNoteBtn) addNoteBtn.addEventListener('click', saveNote);
 
     // Chat refresh button (placeholder function)
-    const refreshChatBtn = document.getElementById('refreshChatBtn');
+    const refreshChatBtn = document.querySelector('.chat-header-btn');
     if(refreshChatBtn) refreshChatBtn.addEventListener('click', refreshChat);
+
+    // ✨ --- NEW: Event Listeners for Source Selection --- ✨
+    const selectAllCheckbox = document.getElementById('selectAllCheckbox');
+    const uploadedFilesList = document.getElementById('uploaded-files');
+
+    if (selectAllCheckbox) {
+        selectAllCheckbox.addEventListener('change', handleSelectAll);
+    }
+    if (uploadedFilesList) {
+        // Use event delegation for individual checkboxes
+        uploadedFilesList.addEventListener('change', (event) => {
+            if (event.target.classList.contains('file-checkbox')) {
+                const fileId = event.target.dataset.fileId;
+                const file = uploadedFiles.find(f => f.id == fileId);
+                if (file) {
+                    file.selected = event.target.checked;
+                }
+                updateSelectAllCheckboxState();
+            }
+        });
+    }
 }
 
 // --- FILE HANDLING ---
@@ -116,44 +116,63 @@ function addFile(file) {
         name: file.name,
         size: formatFileSize(file.size),
         type: file.type,
-        file: file
+        file: file,
+        selected: true // ✨ NEW: Default to selected
     };
     
     uploadedFiles.push(fileObj);
     sourceCount++;
-    updateUI();
-    displayFile(fileObj);
+    renderUploadedFiles(); // ✨ CHANGED: Call the new render function
     
     if (sourceCount === 1) {
         activateChat();
     }
 }
 
-function displayFile(fileObj) {
-    const uploadedFilesContainer = document.getElementById('uploaded-files');
+// ✨ --- NEW: Central function to render the entire file list --- ✨
+function renderUploadedFiles() {
+    const uploadedFilesList = document.getElementById('uploaded-files');
     const emptyState = document.getElementById('empty-state');
+    const uploadedFilesContainer = document.getElementById('uploaded-files-container');
     
-    if (emptyState) emptyState.classList.add('hidden');
-    if (uploadedFilesContainer) uploadedFilesContainer.classList.remove('hidden');
-    
-    const fileItem = document.createElement('div');
-    fileItem.className = 'file-item';
-    fileItem.dataset.fileId = fileObj.id;
-    
-    const fileIcon = getFileIcon(fileObj.type, fileObj.name);
-    
-    fileItem.innerHTML = `
-        <div class="file-icon">${fileIcon}</div>
-        <div class="file-info">
-            <div class="file-name">${fileObj.name}</div>
-            <div class="file-size">${fileObj.size}</div>
-        </div>
-        <input type="checkbox" class="file-checkbox" data-file-id="${fileObj.id}">
-    `;
-    
-    if (uploadedFilesContainer) {
-        uploadedFilesContainer.appendChild(fileItem);
+    if (!uploadedFilesList || !emptyState || !uploadedFilesContainer) return;
+
+    // Clear the current list
+    uploadedFilesList.innerHTML = '';
+
+    if (uploadedFiles.length === 0) {
+        emptyState.classList.remove('hidden');
+        uploadedFilesContainer.classList.add('hidden');
+    } else {
+        emptyState.classList.add('hidden');
+        uploadedFilesContainer.classList.remove('hidden');
+
+        uploadedFiles.forEach(fileObj => {
+            const { iconClass, typeClass } = getFileIconDetails(fileObj.name);
+
+            const fileItem = document.createElement('div');
+            fileItem.className = 'file-item';
+            fileItem.dataset.fileId = fileObj.id;
+            
+            fileItem.innerHTML = `
+                <div class="file-info">
+                    <p>my </p>
+                    <div class="file-icon ${typeClass}">
+                        <i class="${iconClass}"></i>
+                    </div>
+                    <span class="file-name">${fileObj.name}</span>
+                </div>
+                <div class="file-actions">
+                    <label class="checkbox-container">
+                        <input type="checkbox" class="file-checkbox" data-file-id="${fileObj.id}" ${fileObj.selected ? 'checked' : ''}>
+                        <span class="checkmark"></span>
+                    </label>
+                </div>
+            `;
+            uploadedFilesList.appendChild(fileItem);
+        });
     }
+    updateSelectAllCheckboxState();
 }
 
 function handleFileSelect(event) {
@@ -162,12 +181,44 @@ function handleFileSelect(event) {
     closeUploadModal();
 }
 
-// --- MODAL AND DIALOGS ---
+// ✨ --- NEW: Functions to handle checkbox logic --- ✨
+function handleSelectAll(event) {
+    const isChecked = event.target.checked;
+    uploadedFiles.forEach(file => file.selected = isChecked);
+    renderUploadedFiles(); // Re-render to update all checkboxes
+}
+
+function updateSelectAllCheckboxState() {
+    const selectAllCheckbox = document.getElementById('selectAllCheckbox');
+    if (!selectAllCheckbox) return;
+
+    const totalFiles = uploadedFiles.length;
+    const selectedFiles = uploadedFiles.filter(file => file.selected).length;
+
+    if (totalFiles === 0) {
+        selectAllCheckbox.checked = false;
+        selectAllCheckbox.indeterminate = false;
+        return;
+    }
+    
+    if (selectedFiles === totalFiles) {
+        selectAllCheckbox.checked = true;
+        selectAllCheckbox.indeterminate = false;
+    } else if (selectedFiles > 0) {
+        selectAllCheckbox.checked = false;
+        selectAllCheckbox.indeterminate = true;
+    } else {
+        selectAllCheckbox.checked = false;
+        selectAllCheckbox.indeterminate = false;
+    }
+}
+
+
+// --- MODAL AND DIALOGS (No changes from here) ---
 
 function openUploadModal() {
     const modal = document.getElementById('uploadModal');
     if (modal) {
-        modal.style.display = 'flex';
         modal.classList.remove('hidden');
         document.addEventListener('keydown', handleEscapeKey);
     }
@@ -177,10 +228,6 @@ function closeUploadModal() {
     const modal = document.getElementById('uploadModal');
     if (modal) {
         modal.classList.add('hidden');
-        // Use a timeout to allow the fade-out animation to finish
-        setTimeout(() => {
-            modal.style.display = 'none';
-        }, 300);
         document.removeEventListener('keydown', handleEscapeKey);
         document.getElementById('fileInput').value = '';
     }
@@ -218,7 +265,6 @@ function showComingSoon(feature) {
 }
 
 // --- DRAG AND DROP HANDLERS ---
-// (These are still attached via attributes in the HTML for simplicity, but could also be moved here)
 function handleModalDrop(event) {
     event.preventDefault();
     event.stopPropagation();
@@ -241,14 +287,13 @@ function handleModalDragLeave(event) {
 }
 
 
-// --- CHAT LOGIC ---
+// --- CHAT LOGIC (No changes) ---
 
 function activateChat() {
     chatActive = true;
     const welcomeState = document.getElementById('welcomeState');
     const chatMessagesContainer = document.getElementById('chatMessagesContainer');
     const chatInput = document.getElementById('chatInput');
-    const chatInputContainer = document.getElementById('chatInputContainer');
     const sendBtn = document.getElementById('sendBtn');
     
     if (welcomeState) welcomeState.classList.add('hidden');
@@ -258,7 +303,6 @@ function activateChat() {
         chatInput.placeholder = 'Ask a question about your sources...';
         chatInput.focus();
     }
-    if (chatInputContainer) chatInputContainer.classList.add('active');
     if (sendBtn) sendBtn.disabled = false;
     
     setTimeout(() => {
@@ -321,8 +365,6 @@ function sendMessage() {
 }
 
 function refreshChat() {
-    // This is a placeholder. You can define what "refresh" means.
-    // e.g., clear the chat and show the welcome message again.
     const chatMessages = document.getElementById('chatMessagesScroll');
     if(chatMessages) chatMessages.innerHTML = '';
     addMessage(demoMessages[0].type, demoMessages[0].content);
@@ -340,14 +382,24 @@ function createTool(toolName) {
     showComingSoon(toolName);
 }
 
-function getFileIcon(type, name) {
-    if (type.startsWith('image/')) return '🖼️';
-    if (type.startsWith('video/')) return '🎬';
-    if (type.startsWith('audio/')) return '🎵';
-    if (type.includes('pdf') || name.endsWith('.pdf')) return '📄';
-    if (name.endsWith('.doc') || name.endsWith('.docx')) return '📝';
-    if (type.includes('text') || name.endsWith('.txt')) return '📄';
-    return '📁';
+// ✨ --- REVISED: Function to get icon classes for CSS and Font Awesome --- ✨
+function getFileIconDetails(filename) {
+    const extension = filename.split('.').pop().toLowerCase();
+    let iconClass = 'fas fa-file'; // Default icon
+    let typeClass = 'file'; // Default color class
+
+    if (extension === 'pdf') {
+        iconClass = 'fas fa-file-pdf';
+        typeClass = 'pdf';
+    } else if (['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp'].includes(extension)) {
+        iconClass = 'fas fa-file-image';
+        typeClass = 'image';
+    } else if (['txt', 'csv', 'md'].includes(extension)) {
+        iconClass = 'fas fa-file-alt';
+        typeClass = 'text';
+    }
+    // Add more file types as needed
+    return { iconClass, typeClass };
 }
 
 function formatFileSize(bytes) {
@@ -359,10 +411,9 @@ function formatFileSize(bytes) {
 }
 
 function updateUI() {
-    // This function can be expanded to update more parts of the UI
-    const sourceCountElement = document.getElementById('sourceCount'); // Note: This element doesn't exist in your HTML
-    if (sourceCountElement) {
-        sourceCountElement.textContent = `${sourceCount} source${sourceCount !== 1 ? 's' : ''}`;
+    const sourceLimitCount = document.getElementById('sourceLimitCount');
+    if (sourceLimitCount) {
+        sourceLimitCount.textContent = `${sourceCount}/50`;
     }
 }
 
