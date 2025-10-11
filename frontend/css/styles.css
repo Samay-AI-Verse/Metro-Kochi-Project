@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap");
+
 
 /* =================================================================
    1. COLOR & FONT DEFINITIONS (BOTH THEMES)
@@ -1627,7 +1627,7 @@ body.dark-mode .studio-section.expanded .tool-details {
     /* CHANGE: Reduced vertical padding from 16px to 12px 
       to make it more compact and match other section headers (like chat-header).
     */
-    padding: 1px 10px; 
+    padding: 1px 10px 10px 10px; 
     /* CHANGE: Reset border-radius to 0 0 0 0 because the main studio-section
       already handles the top-left/top-right rounding (30px).
     */
@@ -1642,10 +1642,6 @@ body.dark-mode .studio-section.expanded .tool-details {
     background-color: var(--bg-secondary);
 }
 
-/* 4. Ensure the content wrapper starts immediately below the new header */
-.tool-details-wrapper #toolDetailsContent {
-    padding-top: 16px; /* Reset the padding that was removed from the header */
-}
 
 /* Tool Title Font Size Adjustment */
 .tool-details-wrapper .tool-details-title {
@@ -1677,4 +1673,9 @@ body.dark-mode .studio-section.expanded .tool-details {
     font-size: 16px; 
 }
 
-
+.loading-spinner {
+    padding: 20px;
+    text-align: center;
+    color: var(--text-secondary);
+    font-style: italic;
+}

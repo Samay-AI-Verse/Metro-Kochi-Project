@@ -19,24 +19,26 @@
     
     // --- Function to delete a notebook ---
     async function deleteNotebook(notebookId, event) {
-        event.stopPropagation();
-        if (!confirm('Are you sure you want to delete this notebook?')) {
-            return;
-        }
-        try {
-            const response = await fetch(`/api/notebooks/${notebookId}`, { method: 'DELETE' });
-            if (response.status === 204) {
-                notebooks = notebooks.filter(nb => nb.id !== notebookId);
-                renderNotebooks();
-            } else {
-                const errorData = await response.json();
-                throw new Error(errorData.detail || 'Failed to delete notebook');
-            }
-        } catch (error) {
-            console.error('Error deleting notebook:', error);
-            alert('Could not delete the notebook. Please try again.');
-        }
+    event.stopPropagation();
+    if (!confirm('Are you sure you want to delete this notebook?')) {
+        return;
     }
+    try {
+        const response = await fetch(`/api/notebooks/${notebookId}`, { method: 'DELETE' });
+        if (response.status === 204) {
+            notebooks = notebooks.filter(nb => nb.id !== notebookId);
+            renderNotebooks();
+            // NEW: Clear chat history for this notebook from localStorage
+            localStorage.removeItem(`chat_${notebookId}`);
+        } else {
+            const errorData = await response.json();
+            throw new Error(errorData.detail || 'Failed to delete notebook');
+        }
+    } catch (error) {
+        console.error('Error deleting notebook:', error);
+        alert('Could not delete the notebook. Please try again.');
+    }
+}
 
     // Tab switching
     document.querySelectorAll('.nav-tab').forEach(tab => {

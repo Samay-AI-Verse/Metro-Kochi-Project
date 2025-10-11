@@ -13,10 +13,10 @@
         <link rel="stylesheet" href="/static/css/styles.css">
         <link rel="stylesheet"
             href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-        <link rel="stylesheet"
+       <link rel="stylesheet"
             href="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.css">
-        <script
-            src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+        <script defer
+    src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
     </head>
     <body>
         <div class="header">
@@ -106,7 +106,7 @@
                             </div>
                         </div>
 
-                        <div id="empty-state">
+                        <div id="empty-state" class="hidden">
                             <div class="sources-icon">📄</div>
                             <div class="sources-title">Saved sources will appear
                                 here</div>
@@ -222,7 +222,7 @@
                             <h3 class="tool-details-title"></h3>
                             <button class="close-details-btn"
                                 id="closeDetailsBtn" title="Close">
-                               <i class="fas fa-times"></i>
+                               <i class="fa fa-compress"></i>
                             </button>
                         </div>
 

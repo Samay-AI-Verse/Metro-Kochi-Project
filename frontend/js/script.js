@@ -4,26 +4,22 @@ let sourceCount = 0;
 let chatActive = false;
 let currentNotebookId = null;
 
-// Demo messages for AI chat
-const demoMessages = [
-  {
-    type: "ai",
-    content: `Hello there! 
+const CHATBOT_API_URL = "http://localhost:8001/chat";
 
-The documents I have consist of excerpts from a curriculum detailing courses offered under the CHOICE BASED CREDIT & SEMESTER SYSTEM - 2019. These documents outline the structure for various degree programs, primarily focusing on common courses. 
 
-Would you like me to summarize the key structure, explain specific courses, or help you understand the credit system?`,
-  },
-];
+let chatHistory = [];
 
 // --- INITIALIZATION ---
 document.addEventListener("DOMContentLoaded", () => {
   const pathParts = window.location.pathname.split("/");
   const notebookId = pathParts[pathParts.length - 1];
 
+
+  
   if (notebookId && !isNaN(notebookId)) {
     currentNotebookId = parseInt(notebookId, 10);
     fetchAndDisplaySources(currentNotebookId);
+    loadChatHistory();
   } else {
     console.error("Could not determine a valid Notebook ID from URL.");
   }
@@ -284,18 +280,7 @@ function expandToolPanel(studioSection, toolName) {
     selectedView.classList.remove("hidden");
   }
 
-  // --- Tool-specific Initialization (Sarthi Chat only needs initial message) ---
-  if (toolName === "Sarthi Chat") {
-    const studioChat = document.getElementById("chatMessagesStudioScroll");
-    if (studioChat && studioChat.children.length === 0) {
-        // Only add the initial message once
-        const initialMessage = demoMessages[0].content;
-        const messageDiv = document.createElement("div");
-        messageDiv.className = `message ai`;
-        messageDiv.innerHTML = `<div class="message-content"><div class="message-text">${initialMessage.replace(/\n/g, "<br>")}</div></div>`;
-        studioChat.appendChild(messageDiv);
-    }
-  }
+
 }
 
 
@@ -430,38 +415,39 @@ function handleFileSelect(event) {
 }
 
 async function deleteFile(fileName, event) {
-  event.stopPropagation();
+    event.stopPropagation();
+    try {
+        const response = await fetch(`/api/notebooks/${currentNotebookId}/sources/${encodeURIComponent(fileName)}`, {
+            method: 'DELETE',
+        });
+        if (!response.ok) {
+            throw new Error('Failed to delete file');
+        }
+        // Remove file from uploadedFiles
+        uploadedFiles = uploadedFiles.filter(f => f.name !== fileName);
+        sourceCount = uploadedFiles.length;
 
-  if (!currentNotebookId) {
-    alert("Error: No notebook selected.");
-    return;
-  }
+        // NEW: If no files remain, clear chat history and reset UI
+        if (sourceCount === 0) {
+            chatHistory = [];
+            saveChatHistory(); // Clears localStorage for chat_${currentNotebookId}
+            chatActive = false;
+            const container = document.getElementById("chatMessagesScroll");
+            if (container) container.innerHTML = "";
+            const welcomeState = document.getElementById("welcomeState");
+            const chatMessagesContainer = document.getElementById("chatMessagesContainer");
+            if (welcomeState && chatMessagesContainer) {
+                welcomeState.classList.remove("hidden");
+                chatMessagesContainer.classList.add("hidden");
+            }
+        }
 
-  if (!confirm(`Are you sure you want to delete "${fileName}"?`)) {
-    return;
-  }
-
-  try {
-    const response = await fetch(
-      `/api/notebooks/${currentNotebookId}/sources/${encodeURIComponent(
-        fileName
-      )}`,
-      {
-        method: "DELETE",
-      }
-    );
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.detail || "Failed to delete the file.");
+        renderUploadedFiles();
+        updateUI();
+    } catch (error) {
+        console.error('Error deleting file:', error);
+        alert('Could not delete the file.');
     }
-
-    console.log(`Successfully deleted ${fileName}`);
-    await fetchAndDisplaySources(currentNotebookId);
-  } catch (error) {
-    console.error("Error deleting file:", error);
-    alert(`Could not delete the file: ${error.message}`);
-  }
 }
 
 function handleSelectAll(event) {
@@ -571,43 +557,104 @@ function addMessage(type, content) {
   chatMessages.scrollTo({ top: chatMessages.scrollHeight, behavior: "smooth" });
 }
 
-function sendMessage() {
-  const chatInput = document.getElementById("chatInput");
-  if (!chatInput) return;
-  const message = chatInput.value.trim();
+// script.js (Replace your old sendMessage function)
 
-  const selectedFilesCount = uploadedFiles.filter((f) => f.selected).length;
-  if (!message || !chatActive || selectedFilesCount === 0) {
-    if (selectedFilesCount === 0) {
-      alert("Please select at least one source to chat with.");
+async function sendMessage() {
+    const chatInput = document.getElementById("chatInput");
+    const sendBtn = document.getElementById("sendBtn");
+
+    // Determine the correct chat container (in main view or Sarthi Studio view)
+    const studioView = document.getElementById("sarthiChatStudioView");
+    const chatContainerId = studioView && !studioView.classList.contains("hidden") 
+        ? "chatMessagesStudioScroll" 
+        : "chatMessagesScroll"; 
+    const chatContainer = document.getElementById(chatContainerId);
+    
+    if (!chatInput || !chatContainer || chatInput.disabled) return;
+
+    const userMessage = chatInput.value.trim();
+    if (userMessage === "") return;
+
+    // 1. Disable input and clear the text area
+    chatInput.disabled = true;
+    sendBtn.disabled = true;
+    chatInput.value = "";
+    // Assuming you have an autoResizeTextarea function
+    if (typeof autoResizeTextarea === 'function') autoResizeTextarea(); 
+
+    // 2. Display user message
+    appendMessage(chatContainer, "user", userMessage);
+    scrollToBottom(chatContainer);
+
+    // 3. Display typing indicator
+    const typingIndicator = appendTypingIndicator(chatContainer);
+    scrollToBottom(chatContainer);
+
+    try {
+        // 4. API Call to the Hugging Face Backend
+        const response = await fetch(CHATBOT_API_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                // You would typically add your API key here if required by the HF space, 
+                // but since the backend is hosted by you, it's likely handled server-side.
+                // 'Authorization': `Bearer YOUR_API_KEY` 
+            },
+            body: JSON.stringify({ message: userMessage }),
+        });
+
+        if (!response.ok) {
+            // Check for a non-200 status code
+            throw new Error(`Chatbot API failed with status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        // Your backend returns { "reply": "..." }
+        const aiReply = data.reply || "I'm sorry, I couldn't generate a response.";
+
+        // 5. Remove typing indicator and display AI response
+        typingIndicator.remove();
+        appendMessage(chatContainer, "ai", aiReply);
+        
+    } catch (error) {
+        console.error("Error communicating with the chatbot API:", error);
+        typingIndicator.remove();
+        appendMessage(chatContainer, "ai", "⚠️ I'm facing a connection issue right now. Please try again in a moment or contact the developer.");
+    } finally {
+        // 6. Re-enable input
+        chatInput.disabled = false;
+        sendBtn.disabled = false;
+        chatInput.focus();
+        scrollToBottom(chatContainer);
     }
-    return;
-  }
-
-  addMessage("user", message);
-  chatInput.value = "";
-  autoResizeTextarea();
-
-  const sendBtn = document.getElementById("sendBtn");
-  if (sendBtn) sendBtn.disabled = true;
-
-  setTimeout(() => {
-    const responses = [
-      `Based on your selected document(s)... **Main Structure:** The CHOICE BASED CREDIT & SEMESTER SYSTEM...`,
-      `That's a great question! From what I've analyzed in the sources... **Curriculum Overview:** Published in 2019...`,
-      `I can help clarify that concept. According to the selected file(s)... **Credit System Benefits:** Flexibility in course selection...`,
-    ];
-    const randomResponse =
-      responses[Math.floor(Math.random() * responses.length)];
-    addMessage("ai", randomResponse);
-    if (sendBtn) sendBtn.disabled = false;
-  }, 1200 + Math.random() * 800);
 }
 
 function refreshChat() {
-  const chatMessages = document.getElementById("chatMessagesScroll");
-  if (chatMessages) chatMessages.innerHTML = "";
-  addMessage(demoMessages[0].type, demoMessages[0].content);
+    const container = document.getElementById("chatMessagesScroll");
+    if (container) {
+        container.innerHTML = ""; // Clear the chat UI
+    }
+
+    // Clear the in-memory and localStorage chat history
+    chatHistory = [];
+    saveChatHistory(); // Save empty history to localStorage for currentNotebookId
+
+    // Optionally reset the welcome state if no sources are loaded
+    if (!chatActive) {
+        const welcomeState = document.getElementById("welcomeState");
+        const chatMessagesContainer = document.getElementById("chatMessagesContainer");
+        if (welcomeState && chatMessagesContainer) {
+            welcomeState.classList.remove("hidden");
+            chatMessagesContainer.classList.add("hidden");
+        }
+    }
+
+    // Reset the chat input
+    const chatInput = document.getElementById("chatInput");
+    if (chatInput) {
+        chatInput.value = "";
+        autoResizeTextarea(); // Adjust textarea height
+    }
 }
 
 // --- UTILITY & HELPER FUNCTIONS ---
@@ -835,3 +882,85 @@ async function fetchNotebookDetails(notebookId) {
 
 
 
+// script.js (Add these functions)
+
+function appendMessage(container, type, content) {
+    appendMessageToDOM(container, type, content);  // Add to DOM using helper
+
+    // Add to in-memory history and save to storage (only for new messages)
+    chatHistory.push({ type: type, content: content });
+    saveChatHistory();  // Persist immediately
+}
+function appendTypingIndicator(container) {
+    const indicatorDiv = document.createElement("div");
+    indicatorDiv.className = "message ai typing-indicator";
+    indicatorDiv.innerHTML = `
+        <div class="message-content">
+            <div class="typing-dot"></div>
+            <div class="typing-dot"></div>
+            <div class="typing-dot"></div>
+        </div>
+    `;
+    container.appendChild(indicatorDiv);
+    return indicatorDiv;
+}
+
+function scrollToBottom(container) {
+    // Ensure the chat scrolls to show the latest message
+    container.scrollTop = container.scrollHeight;
+}
+
+// Load chat history from localStorage for the current notebook
+// Load chat history from localStorage for the current notebook
+function loadChatHistory() {
+    const container = document.getElementById('chatMessagesScroll');
+    if (!container) return;
+
+    container.innerHTML = ''; // Clear container to prevent duplicates
+    const savedHistory = localStorage.getItem(`chat_${currentNotebookId}`);
+    if (savedHistory) {
+        const parsedHistory = JSON.parse(savedHistory);
+        // Set in-memory chatHistory to the parsed version (do NOT push/modify it here)
+        chatHistory = parsedHistory;
+        // Append to DOM ONLY (no saving)
+        parsedHistory.forEach(msg => {
+            appendMessageToDOM(container, msg.type, msg.content);
+        });
+        scrollToBottom(container);
+    } else {
+        // If no saved history, ensure chatHistory is empty
+        chatHistory = [];
+    }
+    // If no history and no sources, ensure welcome state
+    if (chatHistory.length === 0 && !chatActive) {
+        const welcomeState = document.getElementById("welcomeState");
+        const chatMessagesContainer = document.getElementById("chatMessagesContainer");
+        if (welcomeState && chatMessagesContainer) {
+            welcomeState.classList.remove("hidden");
+            chatMessagesContainer.classList.add("hidden");
+        }
+    } else {
+        const welcomeState = document.getElementById("welcomeState");
+        const chatMessagesContainer = document.getElementById("chatMessagesContainer");
+        if (welcomeState && chatMessagesContainer) {
+            welcomeState.classList.add("hidden");
+            chatMessagesContainer.classList.remove("hidden");
+        }
+    }
+}
+
+// Save chat history to localStorage for the current notebook
+function saveChatHistory() {
+    localStorage.setItem(`chat_${currentNotebookId}`, JSON.stringify(chatHistory));
+}
+
+
+// Helper to append message ONLY to DOM (no saving/history push)
+function appendMessageToDOM(container, type, content) {
+    const messageDiv = document.createElement("div");
+    messageDiv.className = `message ${type}`;
+    // Replace newlines with <br> for proper display of multi-line responses
+    const formattedContent = content.replace(/\n/g, "<br>"); 
+    messageDiv.innerHTML = `<div class="message-content"><div class="message-text">${formattedContent}</div></div>`;
+    container.appendChild(messageDiv);
+}
