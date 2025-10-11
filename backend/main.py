@@ -141,3 +141,118 @@ async def upload_source(notebook_id: int, file: UploadFile = File(...)):
     save_notebooks(notebooks)
     
     return {"message": "File uploaded successfully", "source": source_metadata}
+
+
+
+
+# In main.py, add this new endpoint at the end of the file
+
+@app.delete("/api/notebooks/{notebook_id}/sources/{file_name}")
+async def delete_source(notebook_id: int, file_name: str):
+    """Deletes a specific source file from a notebook and its metadata."""
+    notebooks = load_notebooks()
+    
+    # Find the notebook
+    notebook_to_update = next((nb for nb in notebooks if nb.get("id") == notebook_id), None)
+    if not notebook_to_update:
+        raise HTTPException(status_code=404, detail="Notebook not found")
+
+    # Find the source metadata in the notebook's sources list
+    source_to_delete = next((s for s in notebook_to_update.get("sources", []) if s.get("name") == file_name), None)
+    if not source_to_delete:
+        raise HTTPException(status_code=404, detail="Source file not found in this notebook")
+
+    # Delete the physical file from the uploads folder
+    file_path = os.path.join(UPLOADS_DIR, str(notebook_id), file_name)
+    if os.path.exists(file_path):
+        try:
+            os.remove(file_path)
+        except OSError as e:
+            # If deletion fails, log the error and raise a server error
+            print(f"Error deleting file {file_path}: {e}")
+            raise HTTPException(status_code=500, detail=f"Could not delete file: {e}")
+    else:
+        print(f"Warning: File not found at path {file_path}, but proceeding to remove metadata.")
+
+    # Remove the source's metadata from the list
+    notebook_to_update["sources"] = [s for s in notebook_to_update["sources"] if s.get("name") != file_name]
+    
+    # Save the updated notebook data
+    save_notebooks(notebooks)
+    
+    return {"message": "Source deleted successfully", "deleted_file": file_name}
+
+@app.get("/api/uploads")
+async def list_all_uploaded_files():
+    """Lists all uploaded files from all notebooks."""
+    notebooks = load_notebooks()
+    all_files = []
+
+    for nb in notebooks:
+        for source in nb.get("sources", []):
+            all_files.append({
+                "notebook_id": nb["id"],
+                "notebook_title": nb.get("title", "Untitled"),
+                "file_name": source.get("name"),
+                "file_path": source.get("path"),
+                "file_type": source.get("type"),
+                "file_size": source.get("size")
+            })
+    
+    return {"total_files": len(all_files), "files": all_files}
+
+
+
+class RenameRequest(BaseModel):
+    newName: str
+    
+# In main.py, replace the entire rename_source function
+
+@app.put("/api/notebooks/{notebook_id}/sources/{original_file_name}")
+async def rename_source(notebook_id: int, original_file_name: str, request: RenameRequest):
+    """Renames a source file's base name while preserving its original extension."""
+    notebooks = load_notebooks()
+    
+    # --- Find notebook and source (no changes) ---
+    notebook_to_update = next((nb for nb in notebooks if nb.get("id") == notebook_id), None)
+    if not notebook_to_update:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Notebook not found")
+
+    source_to_rename = next((s for s in notebook_to_update.get("sources", []) if s.get("name") == original_file_name), None)
+    if not source_to_rename:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Source file not found")
+
+    # --- Preserve file extension logic (no changes) ---
+    new_base_name = os.path.splitext(request.newName)[0]
+    if not new_base_name.strip():
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="File name cannot be empty.")
+
+    _, original_extension = os.path.splitext(original_file_name)
+    final_new_name = f"{new_base_name.strip()}{original_extension}"
+    
+    # --- File system and metadata update ---
+    notebook_upload_dir = os.path.join(UPLOADS_DIR, str(notebook_id))
+    old_file_path = os.path.join(notebook_upload_dir, original_file_name)
+    new_file_path = os.path.join(notebook_upload_dir, final_new_name)
+
+    # ✨ NEW: Check if a file with the new name already exists
+    if os.path.exists(new_file_path):
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT, 
+            detail=f"A file named '{final_new_name}' already exists."
+        )
+
+    if os.path.exists(old_file_path):
+        try:
+            os.rename(old_file_path, new_file_path)
+        except OSError as e:
+            raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"Could not rename file: {e}")
+    else:
+        print(f"Warning: File not found at {old_file_path}, but updating metadata anyway.")
+
+    # Update metadata and save
+    source_to_rename["name"] = final_new_name
+    source_to_rename["path"] = f"/uploads/{notebook_id}/{final_new_name}"
+    save_notebooks(notebooks)
+    
+    return {"message": "Source renamed successfully", "updated_source": source_to_rename}

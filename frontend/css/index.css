@@ -1,0 +1,981 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap");
+
+/* =================================================================
+   1. COLOR & FONT DEFINITIONS (BOTH THEMES)
+================================================================= */
+:root {
+  /* --- Light Theme (Default) --- */
+  --bg-primary-light: #eee5da; /* Light Almond */
+  --bg-secondary-light: #ffffff;
+  --text-primary-light: #262424; /* Deep Charcoal */
+  --text-secondary-light: #716a64;
+  --border-light: #dcd3c9;
+  --accent-light: #262424;
+  --accent-hover-light: #403c3c;
+
+  /* --- Dark Theme --- */
+  --bg-primary-dark: #1c1c1c; /* Charcoal Black */
+  --bg-secondary-dark: #2a2a2a;
+  --text-primary-dark: #ffffff;
+  --text-secondary-dark: #a9b4c2;
+  --border-dark: #383838;
+  --accent-dark: #d6efff; /* Ice Blue */
+  --accent-hover-dark: #ffffff;
+
+  --font-sans: "Inter", sans-serif;
+}
+
+/* =================================================================
+   2. THEME SETUP & BASE STYLES
+================================================================= */
+
+/* --- Default to Light Theme variables --- */
+body {
+  --bg-primary: var(--bg-primary-light);
+  --bg-secondary: var(--bg-secondary-light);
+  --text-primary: var(--text-primary-light);
+  --text-secondary: var(--text-secondary-light);
+  --border-color: var(--border-light);
+  --accent-color: var(--accent-light);
+  --accent-hover: var(--accent-hover-light);
+  --accent-text: var(--bg-secondary-light);
+}
+
+/* --- Switch to Dark Theme variables when .dark-mode is present --- */
+body.dark-mode {
+  --bg-primary: var(--bg-primary-dark);
+  --bg-secondary: var(--bg-secondary-dark);
+  --text-primary: var(--text-primary-dark);
+  --text-secondary: var(--text-secondary-dark);
+  --border-color: var(--border-dark);
+  --accent-color: var(--accent-dark);
+  --accent-hover: var(--accent-hover-dark);
+  --accent-text: var(--bg-primary-dark);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  min-height: 100vh;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* =================================================================
+   3. COMPONENT STYLES (USING THEME VARIABLES)
+================================================================= */
+
+/* Header */
+/* Header */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 32px;
+  
+  /* ADD THIS LINE 👇 */
+  background-color: var(--bg-primary);
+
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.logo {
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--text-primary);
+  /* Other styles unchanged */
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  position: relative;
+}
+
+.settings-btn {
+  background: transparent;
+  border: 1px solid var(--text-primary);
+  color: var(--text-primary);
+  /* Other styles unchanged */
+  padding: 10px 16px;
+  border-radius: 50px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+}
+
+.settings-btn:hover {
+  /* This sets the background to solid white on hover */
+  background-color: #ffffff;
+  
+  /* This ensures the black text and icon stay black */
+  color: var(--text-primary);
+  
+  /* This makes the border white so it blends in with the background */
+  border-color: #ffffff;
+  
+  /* These are the existing effects for lift and shadow, which still look great */
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.settings-btn:hover svg {
+  /* Ensures the icon color matches the inverted text color on hover */
+  fill: var(--accent-text);
+}
+
+.settings-btn svg {
+  width: 20px;
+  height: 20px;
+  fill: var(--text-primary);
+  transition: fill 0.2s ease;
+}
+
+
+.profile-btn {
+  border: 2px solid var(--text-primary);
+  /* Other styles unchanged */
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  padding: 0;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.profile-btn img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Main Container */
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 32px;
+}
+
+.welcome-message {
+  text-align: center;
+  padding: 48px 0 24px;
+}
+.welcome-message h1 {
+  font-size: 3rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+/* Navigation and Controls Bar */
+.nav-controls-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px 0 32px 0;
+  margin-bottom: 32px;
+}
+
+.nav-tabs {
+  display: flex;
+  gap: 8px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 50px;
+  padding: 6px;
+}
+
+.nav-tab {
+  padding: 10px 20px;
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  border-radius: 50px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.nav-tab.active {
+  background: var(--accent-color);
+  color: var(--accent-text);
+}
+
+.controls-bar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+/* --- THEME TOGGLE BUTTON --- */
+.theme-toggle-btn {
+  background: transparent;
+  border: 1px solid var(--border-color);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  transition: all 0.2s ease;
+}
+.theme-toggle-btn:hover {
+  background-color: var(--bg-secondary);
+  border-color: var(--accent-color);
+}
+.theme-toggle-btn svg {
+  width: 20px;
+  height: 20px;
+  fill: var(--text-secondary);
+  transition: all 0.2s ease;
+}
+.theme-toggle-btn:hover svg {
+  fill: var(--accent-color);
+}
+.moon-icon {
+  display: none;
+}
+body.dark-mode .sun-icon {
+  display: none;
+}
+body.dark-mode .moon-icon {
+  display: block;
+}
+
+.create-btn {
+  background: var(--accent-color);
+  border: none;
+  color: var(--accent-text);
+  padding: 12px 24px;
+  border-radius: 50px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+}
+
+.create-btn:hover {
+  background: var(--accent-hover);
+  transform: translateY(-2px);
+}
+
+/* Section Title */
+.section-title {
+  font-size: 24px;
+  font-weight: 500;
+  margin-bottom: 24px;
+  color: var(--text-primary);
+}
+
+/* Cards */
+.featured-card,
+.recent-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  padding: 24px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+}
+.featured-card:hover,
+.recent-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  border-color: var(--accent-color);
+}
+
+.featured-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 24px;
+  margin-bottom: 16px;
+}
+
+.featured-card {
+  height: 200px;
+  overflow: hidden;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
+}
+
+.publisher-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.publisher-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--text-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 14px;
+  color: var(--bg-secondary);
+}
+
+.publisher-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.card-options {
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.featured-title {
+  font-size: 22px;
+  font-weight: 500;
+  line-height: 1.3;
+  margin-bottom: 12px;
+  color: var(--text-primary);
+}
+
+.featured-meta {
+  font-size: 13px;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.recent-section {
+  margin-top: 48px;
+}
+.recent-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 24px;
+}
+.recent-card {
+  min-height: 160px;
+}
+
+.create-new-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  border: 2px dashed var(--border-color);
+  background: transparent;
+}
+.create-new-card:hover {
+  border-color: var(--accent-color);
+  background: var(--bg-secondary);
+}
+
+.plus-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  margin-bottom: 12px;
+  color: var(--text-primary);
+}
+
+.notebook-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  background: var(--text-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+  font-size: 16px;
+  color: var(--bg-secondary);
+}
+
+.notebook-title {
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 1.3;
+  margin-bottom: 12px;
+  color: var(--text-primary);
+}
+
+.notebook-meta {
+  font-size: 13px;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.options-btn {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: var(--bg-primary);
+  border: none;
+  color: var(--text-secondary);
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: all 0.2s ease;
+}
+.recent-card:hover .options-btn {
+  opacity: 1;
+}
+.options-btn:hover {
+  background: var(--accent-color);
+  color: var(--accent-text);
+}
+
+/* Modals and Popups */
+.modal {
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(4px);
+  /* Other styles unchanged */
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1000;
+}
+.modal-content,
+.profile-popup,
+.dropdown-menu {
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+.modal-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 32px;
+  border-radius: 16px;
+  width: 90%;
+  max-width: 480px;
+}
+.modal h2 {
+  color: var(--text-primary);
+}
+.form-group label {
+  color: var(--text-primary);
+}
+.form-group input {
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+}
+.form-group input:focus {
+  border-color: var(--accent-color);
+  box-shadow: 0 0 0 3px var(--accent-color-trans);
+  --accent-color-trans: #26242420; /* fallback */
+}
+body.dark-mode .form-group input:focus {
+  --accent-color-trans: #d6efff20;
+}
+.modal-btn.primary {
+  background: var(--accent-color);
+  color: var(--accent-text);
+}
+.modal-btn.primary:hover {
+  background: var(--accent-hover);
+}
+.modal-btn.secondary {
+  background: var(--border-color);
+  color: var(--text-secondary);
+}
+.modal-btn.secondary:hover {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+}
+.close-btn {
+  color: var(--text-secondary);
+}
+
+/* Other styles can be simplified as they now use the theme variables */
+.see-all-link {
+  color: var(--text-secondary);
+}
+.see-all-link:hover {
+  color: var(--text-primary);
+}
+.dropdown-item:hover {
+  background-color: var(--bg-primary);
+}
+.dropdown-item svg {
+  fill: var(--text-secondary);
+}
+.dropdown-divider {
+  background-color: var(--border-color);
+}
+.profile-greeting {
+  color: var(--text-primary);
+}
+.profile-popup-footer {
+  border-top: 1px solid var(--border-color);
+}
+.profile-btn-secondary {
+  border: 1px solid var(--border-color);
+  color: var(--text-secondary);
+}
+.profile-btn-secondary:hover {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+/* --- Unchanged generic layout styles --- */
+.hidden {
+  display: none;
+}
+.see-all {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 16px;
+  text-decoration: none;
+}
+.profile-popup {
+  display: none;
+  position: fixed;
+  top: 68px;
+  right: 32px;
+  width: 360px;
+  border-radius: 28px;
+  z-index: 1001;
+}
+.profile-popup-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 8px 16px 24px;
+  font-size: 14px;
+}
+.profile-popup-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 24px 20px 24px;
+  text-align: center;
+}
+.profile-pic {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  position: relative;
+  margin-bottom: 12px;
+  background-image: url("https://i.pinimg.com/736x/fa/d5/e7/fad5e79954583ad50ccb3f16ee64f66d.jpg");
+  background-size: cover;
+  background-position: center;
+}
+.profile-pic-camera-icon {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.profile-pic-camera-icon svg {
+  width: 16px;
+  height: 16px;
+}
+.profile-greeting {
+  font-size: 22px;
+  font-weight: 500;
+  margin-bottom: 12px;
+}
+.profile-popup-footer {
+  display: flex;
+  justify-content: space-between;
+  padding: 16px 24px;
+}
+.profile-btn-secondary {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background-color: transparent;
+  font-size: 14px;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  flex-grow: 1;
+  justify-content: center;
+  transition: all 0.2s;
+}
+.profile-btn-secondary:first-child {
+  margin-right: 8px;
+}
+.dropdown-menu {
+  display: none;
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  min-width: 260px;
+  padding: 8px;
+  z-index: 1002;
+  border-radius: 12px;
+}
+.dropdown-menu.show {
+  display: block;
+}
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 10px 12px;
+  font-size: 14px;
+  text-decoration: none;
+  border-radius: 8px;
+  cursor: pointer;
+  background-color: transparent;
+  border: none;
+  width: 100%;
+  text-align: left;
+}
+.dropdown-item svg {
+  width: 20px;
+  height: 20px;
+}
+.dropdown-divider {
+  height: 1px;
+  margin: 8px 0;
+}
+.has-submenu {
+  position: relative;
+}
+.has-submenu .arrow {
+  margin-left: auto;
+}
+.submenu {
+  display: none;
+  top: -8px;
+  left: 100%;
+  margin-left: 4px;
+}
+.has-submenu:hover > .submenu {
+  display: block;
+}
+
+@media (max-width: 1024px) {
+  /* Unchanged responsive styles */
+  .nav-controls-container {
+    flex-direction: column;
+    gap: 20px;
+    align-items: stretch;
+  }
+  .controls-bar {
+    justify-content: space-between;
+  }
+}
+@media (max-width: 768px) {
+  /* Unchanged responsive styles */
+  .container {
+    padding: 0 16px;
+  }
+  .header {
+    padding: 16px;
+  }
+  .nav-controls-container {
+    flex-direction: column;
+    gap: 16px;
+    align-items: stretch;
+  }
+  .controls-bar {
+    flex-direction: column;
+    gap: 16px;
+    align-items: stretch;
+  }
+  .featured-grid,
+  .recent-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+/* --- THEME TOGGLE BUTTON --- */
+.theme-toggle-btn {
+    background: transparent;
+    /* This now uses the main text color (black) for the border */
+    border: 1px solid var(--text-primary);
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    transition: all 0.2s ease;
+}
+
+
+
+.theme-toggle-btn svg {
+    /* This now uses the main text color (black) for the icon */
+    fill: var(--text-primary);
+    width: 20px;
+    height: 20px;
+    transition: all 0.2s ease;
+}
+
+.settings-btn:hover {
+  /* This sets the background to solid white on hover */
+  background-color: #ffffff;
+  
+  /* FIX: This forces the TEXT color to be black in BOTH themes */
+  color: var(--text-primary-light); 
+  
+  /* This makes the border white so it blends in */
+  border-color: #ffffff;
+  
+  /* These are the existing effects for lift and shadow */
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.settings-btn:hover svg {
+  /* FIX: This forces the ICON color to be black in BOTH themes */
+  fill: var(--text-primary-light);
+}
+
+/* =================================================================
+   MODAL STYLES (NEW)
+================================================================= */
+
+/* --- Modal Backdrop --- */
+/* --- Modal Backdrop --- */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(5px);
+  /* The flex properties below will apply once display is changed by JS */
+  align-items: center;
+  justify-content: center;
+}
+/* --- Modal Content Box --- */
+
+/* Animation for modal appearance */
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* --- Modal Header & Close Button --- */
+.modal-content h2 {
+  font-size: 22px; /* Consistent title size */
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 24px;
+  color: var(--text-primary);
+}
+
+.close-btn {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: var(--bg-primary);
+  color: var(--text-secondary);
+  border: none;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  font-size: 20px;
+  line-height: 32px; /* Vertically center the '×' */
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.close-btn:hover {
+  background-color: var(--border-color);
+  color: var(--text-primary);
+  transform: rotate(90deg); /* Nice hover effect */
+}
+
+/* --- Form Elements --- */
+.form-group {
+  margin-bottom: 24px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 12px 16px;
+  font-size: 16px;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  border-radius: 12px; /* A softer, modern radius */
+  transition: all 0.2s ease;
+  outline: none; /* Remove default outline */
+}
+
+.form-group input::placeholder {
+  color: var(--text-secondary);
+  opacity: 0.7;
+}
+
+.form-group input:focus {
+  border-color: var(--accent-color);
+  /* A more modern focus ring using box-shadow */
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent-color) 20%, transparent);
+}
+
+/* --- Modal Action Buttons --- */
+.modal-buttons {
+  display: flex;
+  justify-content: flex-end; /* Align buttons to the right */
+  gap: 12px;
+  margin-top: 32px;
+}
+
+.modal-btn {
+  padding: 12px 24px;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 50px; /* Pill shape to match other buttons */
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.modal-btn.primary {
+  background-color: var(--accent-color);
+  color: var(--accent-text);
+}
+
+.modal-btn.primary:hover {
+  background-color: var(--accent-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.imagelogo{
+  width: 50px;
+}
+
+
+/* Add this block to your styles.css */
+/* Ensure the logo images fit their container */
+.logo-icon .logo-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* Use 'contain' to ensure the whole logo is visible */
+    transition: opacity 0.3s ease;
+}
+
+/* By default (Light Mode), hide the dark logo and show the light logo */
+.logo-icon .light-logo {
+    display: block;
+}
+.logo-icon .dark-logo {
+    display: none;
+}
+
+/* In Dark Mode, hide the light logo and show the dark logo */
+body.dark-mode .logo-icon .light-logo {
+    display: none;
+}
+body.dark-mode .logo-icon .dark-logo {
+    display: block;
+}
+
+
+/* You should also update the original .logo-icon style to remove the background/text that was used for the '📓' placeholder */
+.logo-icon {
+    /* Existing styles from styles.css: */
+    /* background: var(--accent-color); */
+    /* color: var(--accent-text); */
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: bold;
+    margin-left: 5px;
+
+    /* REVISIONS: Remove the background and text color to let the image show through cleanly. */
+    background: none;
+    color: transparent; /* Or simply omit the color property if it doesn't cause issues */
+}
+
+
+/* In styles.css (Section 3. RE-THEMED COMPONENT STYLES) */
+
+
+

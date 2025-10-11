@@ -4,40 +4,51 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>MetroDocAi</title>
+        <title>Sarthi Astra</title>
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link
             href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap"
             rel="stylesheet">
         <link rel="stylesheet" href="/static/css/styles.css">
+        <link rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+        <link rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.css">
+        <script
+            src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
     </head>
     <body>
         <div class="header">
             <div class="logo">
-                <div class="logo-icon">📓</div>
-                Untitled notebook
+                <div class="logo-icon">
+                    <img src="/static/images/logo2.png" alt="Light Mode Logo"
+                        class="logo-img light-logo">
+                    <img src="/static/images/logo2.png" alt="Dark Mode Logo"
+                        class="logo-img dark-logo">
+                </div>
+                Sarthi Astra
             </div>
             <div class="header-controls">
+                <!-- ADD THIS NEW BUTTON -->
+                <button class="theme-toggle-btn" id="theme-toggle-btn"
+                    title="Toggle theme">
+                    <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24" fill="currentColor"><path
+                            d="M12 2.25a.75.75 0 01.75.75v2.25a.75.75 0 01-1.5 0V3a.75.75 0 01.75-.75zM7.5 12a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM18.894 6.106a.75.75 0 010 1.06l-1.591 1.59a.75.75 0 11-1.06-1.06l1.59-1.59a.75.75 0 011.06 0zM21.75 12a.75.75 0 01-.75.75h-2.25a.75.75 0 010-1.5H21a.75.75 0 01.75.75zM17.803 17.803a.75.75 0 01-1.06 0l-1.59-1.591a.75.75 0 111.06-1.06l1.59 1.59a.75.75 0 010 1.06zM12 21a.75.75 0 01-.75-.75v-2.25a.75.75 0 011.5 0V20.25a.75.75 0 01-.75.75zM6.106 18.894a.75.75 0 011.06 0l1.59 1.59a.75.75 0 01-1.06 1.06l-1.59-1.59a.75.75 0 010-1.06zM3 12a.75.75 0 01.75-.75h2.25a.75.75 0 010 1.5H3.75A.75.75 0 013 12zM6.697 6.697a.75.75 0 010-1.06l1.59-1.591a.75.75 0 111.06 1.06l-1.59 1.59a.75.75 0 01-1.06 0z"></path></svg>
+                    <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24" fill="currentColor"><path
+                            fill-rule="evenodd"
+                            d="M9.528 1.718a.75.75 0 01.162.819A8.97 8.97 0 009 6a9 9 0 009 9 8.97 8.97 0 004.463-.949a.75.75 0 01.819.162l.805.805a.75.75 0 01-.004 1.064A11.25 11.25 0 0112 21a11.25 11.25 0 01-9.472-5.452a.75.75 0 011.064-.004l.805.805a.75.75 0 01.819.162z"
+                            clip-rule="evenodd"></path></svg>
+                </button>
                 <button class="share-btn" id="Share">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18"
-                        height="18" viewBox="0 0 24 24" fill="none"
-                        stroke="currentColor" stroke-width="1.8"
-                        stroke-linecap="round" stroke-linejoin="round">
-                        <rect x="3" y="11" width="18" height="10" rx="2"
-                            ry="2"></rect>
-                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-                        <circle cx="12" cy="16" r="1"></circle>
-                    </svg>
-
+                    <i class="far fa-paper-plane"></i>
                     <span>Share</span>
                 </button>
-
                 <button class="settings-btn" id="settingsBtn">
-                    <svg viewBox="0 0 24 24">
-                        <path
-                            d="M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65C14.46 2.18 14.25 2 14 2h-4c-.25 0-.46.18-.49.42l-.38 2.65c-.61.25-1.17.59-1.69.98l-2.49-1c-.23-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64l2.11 1.65c-.04.32-.07.65-.07.98s.03.66.07.98l-2.11 1.65c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1c.52.4 1.08.73 1.69.98l.38 2.65c.03.24.24.42.49.42h4c.25 0 .46-.18.49-.42l.38-2.65c.61-.25 1.17-.59 1.69-.98l2.49 1c.23.09.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65zM12 15.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z"></path>
-                    </svg>Settings
+                    <i class="fas fa-gear"></i>
+                    <span>Settings</span>
                 </button>
 
                 <button class="profile-btn" id="profileBtn"><img
@@ -55,22 +66,46 @@
                 <div class="sidebar-content">
                     <div class="sidebar-header">
                         <div class="header-left">
-                            <h3 class="sidebar-title">Sources</h3>
+                            <h3 class="sidebar-title">Vault</h3>
                         </div>
-                       
+                        <!-- Thsi is a Side bar expanded animation button -->
+                        <button class="sidebar-toggle-btn"
+                            id="sidebar-toggle-btn" title="Toggle sidebar">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                height="24" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="3" width="18" height="18" rx="2"
+                                    ry="2"></rect>
+                                <line x1="9" y1="3" x2="9" y2="21"></line>
+                            </svg>
+                        </button>
                     </div>
 
                     <!-- Sources Content -->
                     <div class="sources-content">
-                        <!-- Empty State -->
-                          <div class="header-actions">
-                            <button class="add-btn" onclick="openUploadModal()"
-                                title="Add source">
-                                <span class="btn-icon">+</span>
-                                <span class="btn-text">Add</span>
-                            </button>
+                        <button class="add-btn" onclick="openUploadModal()"
+                            title="Add source">
+                            <span class="btn-icon">+</span>
+                            <span class="btn-text">Add</span>
+                        </button>
+                        <div class="sources-header">
+                            <span class="sources-header-title">Select all
+                                sources</span>
 
+                            <div class="checkbox-wrapper-31" id="checkbox">
+                                <input type="checkbox" id="selectAllCheckbox" />
+                                <svg viewBox="0 0 35.6 35.6">
+                                    <circle class="background" cx="17.8"
+                                        cy="17.8" r="17.8"></circle>
+                                    <circle class="stroke" cx="17.8" cy="17.8"
+                                        r="14.37"></circle>
+                                    <polyline class="check"
+                                        points="11.78 18.12 15.55 22.23 25.17 12.87"></polyline>
+                                </svg>
+                            </div>
                         </div>
+
                         <div id="empty-state">
                             <div class="sources-icon">📄</div>
                             <div class="sources-title">Saved sources will appear
@@ -83,7 +118,6 @@
                             </div>
                         </div>
 
-                        <!-- Uploaded Files -->
                         <div id="uploaded-files"
                             class="uploaded-files hidden"></div>
                     </div>
@@ -93,11 +127,8 @@
             <!-- Chat Section -->
             <div class="chat-section">
                 <div class="chat-header">
-                    <div class="chat-title">Chat</div>
-                    <div class="chat-header-actions">
-                        <button class="chat-header-btn"
-                            onclick="refreshChat()">⟳ Refresh</button>
-                    </div>
+                    <div class="chat-title">Sarthi</div>
+                    <div class="header-controls"></div>
                 </div>
 
                 <!-- Chat Messages Area -->
@@ -143,51 +174,134 @@
                 </div>
             </div>
 
-            <!-- Studio Section -->
             <div class="studio-section">
                 <div class="studio-header">
-                    <div class="studio-title">Studio</div>
+                    <div class="studio-title">Workspace</div>
+                    <button class="studio-toggle-btn" id="studio-toggle-btn"
+                        title="Toggle studio">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24"
+                            height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="3" width="18" height="18" rx="2"
+                                ry="2"></rect>
+                            <line x1="15" y1="3" x2="15" y2="21"></line>
+                        </svg>
+                    </button>
                 </div>
-                <div class="create-overview">
-
-                </div>
+                <div class="create-overview"></div>
                 <div class="studio-tools">
                     <div class="tool-card">
-                        <div class="tool-icon">🎵</div>
-                        <div class="tool-name">Audio Overview</div>
+                        <div class="tool-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="tool-name">Sarthi Chat</div>
                     </div>
                     <div class="tool-card">
-                        <div class="tool-icon">🎬</div>
-                        <div class="tool-name">Video Overview</div>
+                        <div class="tool-icon">
+                            <i class="fas fa-square-poll-vertical"></i>
+                        </div>
+                        <div class="tool-name">Report Board</div>
                     </div>
                     <div class="tool-card">
-                        <div class="tool-icon">🗺️</div>
-                        <div class="tool-name">Mind Map</div>
+                        <div class="tool-icon">
+                            <i class="fas fa-bullseye"></i>
+                        </div>
+                        <div class="tool-name">IntelliAlert</div>
                     </div>
                     <div class="tool-card">
-                        <div class="tool-icon">📊</div>
-                        <div class="tool-name">Reports</div>
+                        <div class="tool-icon">
+                            <i class="fas fa-diagram-project"></i>
+                        </div>
+                        <div class="tool-name">DocMap View</div>
                     </div>
-                    <div class="tool-card">
-                        <div class="tool-icon">🃏</div>
-                        <div class="tool-name">Flashcards</div>
-                    </div>
-                    <div class="tool-card">
-                        <div class="tool-icon">❓</div>
-                        <div class="tool-name">Quiz</div>
+                    <!-- Tool details for expansion -->
+                    <div class="tool-details-wrapper hidden"
+                        id="toolDetailsWrapper">
+                        <div class="tool-details-header">
+                            <h3 class="tool-details-title"></h3>
+                            <button class="close-details-btn"
+                                id="closeDetailsBtn" title="Close">
+                               <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+
+                        <div class="tool-details-content"
+                            id="toolDetailsContent">
+                            <div id="sarthiChatStudioView"
+                                class="tool-view hidden">
+                                <div class="chat-messages-container-studio">
+                                    <div class="chat-messages-studio"
+                                        id="chatMessagesStudioScroll">
+                                    </div>
+                                </div>
+                                <div class="chat-input-studio-section">
+                                    <div class="chat-input-container">
+                                        <textarea class="chat-input"
+                                            id="chatInputStudio"
+                                            placeholder="Ask a quick question..."
+                                            rows="1"></textarea>
+                                        <div class="input-actions">
+                                            <button class="send-btn"
+                                                id="sendBtnStudio">➤</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div id="reportBoardView" class="tool-view hidden">
+                                <p class="tool-info-text">This will be your
+                                    interactive **Report Board** view. Data
+                                    visualization elements (charts, tables) will
+                                    load here.</p>
+                                <div
+                                    class="tool-content-placeholder">Chart/Dashboard
+                                    Placeholder</div>
+                                <button class="secondary-action-btn">Generate
+                                    New Report</button>
+                            </div>
+
+                            <div id="intelliAlertView" class="tool-view hidden">
+                                <p class="tool-info-text">IntelliAlert provides
+                                    real-time insights based on your selected
+                                    sources.</p>
+                                <ul class="alert-list">
+                                    <li><i class="fas fa-bell"></i> **Alert 1:**
+                                        High concentration of a specific keyword
+                                        detected.</li>
+                                    <li><i class="fas fa-bell"></i> **Alert 2:**
+                                        Potential conflict between two
+                                        documents.</li>
+                                </ul>
+                                <button class="secondary-action-btn">View All
+                                    Alerts</button>
+                            </div>
+
+                            <div id="docMapView" class="tool-view hidden">
+                                <p class="tool-info-text">DocMap View visualizes
+                                    the semantic relationships between all your
+                                    uploaded documents.</p>
+                                <div class="tool-content-placeholder">Document
+                                    Map Placeholder (Mermaid Diagram)</div>
+                                <button class="secondary-action-btn">Explore
+                                    Full Map</button>
+                            </div>
+
+                        </div>
                     </div>
                 </div>
                 <div class="studio-footer">
-
-                    <button class="add-note-btn">✏️ Add note</button>
+                    <button class="add-note-btn">
+                        <span class="btn-icon">✏️</span>
+                        <span class="btn-text">Add note</span>
+                    </button>
                 </div>
             </div>
         </div>
 
         <!-- File Input -->
         <input type="file" id="fileInput" multiple
-            accept=".pdf,.doc,.docx,.txt,.jpg,.jpeg,.png,.mp3,.mp4,.avi"
-            onchange="handleFileSelect(event)">
+            accept=".pdf,.doc,.docx,.txt,.jpg,.jpeg,.png,.mp3,.mp4,.avi">
 
         <!-- Upload Modal -->
         <div id="uploadModal" class="modal-overlay hidden">
